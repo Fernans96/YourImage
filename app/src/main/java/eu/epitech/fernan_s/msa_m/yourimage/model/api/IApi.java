@@ -1,4 +1,4 @@
-package eu.epitech.fernan_s.msa_m.yourimage.model;
+package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
 
@@ -7,7 +7,9 @@ import android.content.Context;
  */
 
 public interface IApi {
+    public String getAuthlink();
     public void connect(Context ctx);
+    public void auth(String query);
     public String getThread(int page);
     public String getThread(String tags, int page);
     public void SendPic(String pic);
