@@ -1,6 +1,10 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
+import android.support.test.espresso.core.deps.guava.base.Splitter;
+import android.util.Log;
+
+import java.util.Map;
 
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 
@@ -30,7 +34,10 @@ public class ImgurAPI implements IApi {
 
     @Override
     public void auth(String query) {
+        String[] ret = query.split("#");
+        Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(ret[ret.length - 1]);
 
+        Log.d("Access", map.get("access_token"));
     }
 
     @Override
