@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -32,6 +32,9 @@ public class AuthDialog extends Dialog {
         AuthDialog.this.progress.setProgress(0);
         _wv = (WebView)this.findViewById(R.id.authView);
         _wv.getSettings().setJavaScriptEnabled(true);
+        _wv.getSettings().setUseWideViewPort(true);
+        _wv.getSettings().setLoadWithOverviewMode(true);
+        _wv.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         _wv.loadUrl(api.getAuthlink());
 
 
@@ -40,18 +43,17 @@ public class AuthDialog extends Dialog {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
-
+                view.setVisibility(View.GONE);
                 progress.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 progress.setVisibility(View.GONE);
+                view.setVisibility(View.VISIBLE);
                 if (url.contains("code=") || url.contains("access_token=")) {
                     api.auth(url);
-                    Log.d("Bondour", url);
                     _diag.dismiss();
-                    Toast.makeText(context, "Auth Done", Toast.LENGTH_LONG).show();
                 }
             }
 

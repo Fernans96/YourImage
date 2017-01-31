@@ -5,4 +5,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.image;
  */
 
 public interface IImage {
+    public String getLink();
+    public String getTitle();
+    public String getDesc();
 }

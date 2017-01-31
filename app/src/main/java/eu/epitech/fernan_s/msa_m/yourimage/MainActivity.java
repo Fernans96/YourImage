@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImgurAPI img = new ImgurAPI();
+                ImgurAPI img = new ImgurAPI(view.getContext());
                 img.connect(view.getContext());
             }
         });
