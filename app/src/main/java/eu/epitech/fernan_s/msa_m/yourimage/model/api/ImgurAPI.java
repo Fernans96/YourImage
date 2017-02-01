@@ -39,7 +39,7 @@ public class ImgurAPI implements IApi {
 
     public ImgurAPI(Context ctx) {
         _ctx = ctx;
-        String str = _ctx.getSharedPreferences("tokens",0).getString("ImgurToken",null);
+        String str = _ctx.getSharedPreferences("tokens", 0).getString("ImgurToken", null);
         if (str != null) {
             try {
                 token = ImgurToken.Parse(new JSONObject(str));
@@ -67,14 +67,6 @@ public class ImgurAPI implements IApi {
             diag.show();
         } else {
             Toast.makeText(_ctx, "Already auth", Toast.LENGTH_LONG).show();
-            getThread(0, new IThread.GetThreadCallback() {
-                @Override
-                public void onGetThreadComplete(List<IThread> lThread) {
-                    for (IThread thread : lThread) {
-                        Log.d("test", "onGetThreadComplete: " + thread.getTitle());
-                    }
-                }
-            });
         }
     }
 
@@ -83,8 +75,13 @@ public class ImgurAPI implements IApi {
         String[] ret = query.split("#");
         Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(ret[ret.length - 1]);
         token = new ImgurToken(map);
-        _ctx.getSharedPreferences("tokens",0).edit().putString("ImgurToken", token.ToJson().toString()).apply();
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", token.ToJson().toString()).apply();
         Toast.makeText(_ctx, "Auth Succeed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean isConnected() {
+        return (token != null);
     }
 
     @Override

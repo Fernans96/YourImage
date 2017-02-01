@@ -21,9 +21,11 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.stfalcon.multiimageview.MultiImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<IThread> treads;
     private CardAdapter cardAdapter;
+    private List<IApi> _lapi = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +64,27 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        _lapi.add(new ImgurAPI(this));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ImgurAPI img = new ImgurAPI(view.getContext());
-                img.connect(view.getContext());
+                if (!_lapi.get(0).isConnected()) {
+                    _lapi.get(0).connect(view.getContext());
+                } else {
+                    _lapi.get(0).getThread(0, new IThread.GetThreadCallback() {
+                        @Override
+                        public void onGetThreadComplete(final List<IThread> lThread) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    int old = treads.size();
+                                    treads.addAll(lThread);
+                                    cardAdapter.notifyItemRangeInserted(old - 1, lThread.size());
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
 

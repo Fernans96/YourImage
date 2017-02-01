@@ -12,6 +12,7 @@ public interface IApi {
     public String getAuthlink();
     public void connect(Context ctx);
     public void auth(String query);
+    public boolean isConnected();
     public void getThread(int page, IThread.GetThreadCallback callback);
     public void getThread(String tags, int page, IThread.GetThreadCallback callback);
     public void SendPic(String pic);
