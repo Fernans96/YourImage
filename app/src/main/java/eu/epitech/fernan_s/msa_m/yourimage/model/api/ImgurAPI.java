@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.epitech.fernan_s.msa_m.yourimage.SHttpClient;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
@@ -88,7 +89,7 @@ public class ImgurAPI implements IApi {
 
     @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = SHttpClient.getInstance().getClient();
         Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:").addHeader("Authorization", "Bearer " + token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -122,7 +123,7 @@ public class ImgurAPI implements IApi {
 
     @Override
     public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = SHttpClient.getInstance().getClient();
         Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:" + tags).addHeader("Authorization", "Bearer " + token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
