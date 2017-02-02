@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        _lapi = new ArrayList<>();
         _lapi.add(new ImgurAPI(this));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
