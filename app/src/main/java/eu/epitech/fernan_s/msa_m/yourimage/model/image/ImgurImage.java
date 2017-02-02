@@ -5,18 +5,28 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.image;
  */
 
 public class ImgurImage implements IImage {
+    public String _link;
+    public String _title;
+    public String _desc;
+
+    public ImgurImage (String link, String title, String desc) {
+        _link = link;
+        _title = title;
+        _desc = desc;
+    }
+
     @Override
     public String getLink() {
-        return null;
+        return _link;
     }
 
     @Override
     public String getTitle() {
-        return null;
+        return _title;
     }
 
     @Override
     public String getDesc() {
-        return null;
+        return _desc;
     }
 }

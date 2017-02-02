@@ -3,6 +3,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -35,7 +36,18 @@ public class AuthDialog extends Dialog {
         _wv.getSettings().setUseWideViewPort(true);
         _wv.getSettings().setLoadWithOverviewMode(true);
         _wv.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        _wv.loadUrl(api.getAuthlink());
+        api.getAuthlink(new IApi.AuthLinkCallback() {
+            @Override
+            public void onAuthLinkFinished(final String authlink) {
+                Handler handler = new Handler(context.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        _wv.loadUrl(authlink);
+                    }
+                });
+            }
+        });
 
 
 
@@ -51,7 +63,7 @@ public class AuthDialog extends Dialog {
             public void onPageFinished(WebView view, String url) {
                 progress.setVisibility(View.GONE);
                 view.setVisibility(View.VISIBLE);
-                if (url.contains("code=") || url.contains("access_token=")) {
+                if (url.contains("code=") || url.contains("oauth_verifier=") || url.contains("access_token=")) {
                     api.auth(url);
                     _diag.dismiss();
                 }

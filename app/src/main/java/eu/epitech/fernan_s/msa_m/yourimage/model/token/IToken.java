@@ -10,5 +10,6 @@ public interface IToken {
     public String getUserName();
     public String getToken();
     public String getAuthType();
+    public String getSecret();
     public JSONObject ToJson();
 }

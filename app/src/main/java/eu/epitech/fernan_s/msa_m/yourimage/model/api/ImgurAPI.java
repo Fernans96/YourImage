@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import eu.epitech.fernan_s.msa_m.yourimage.SHttpClient;
+import eu.epitech.fernan_s.msa_m.yourimage.singletone.SHttpClient;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
@@ -35,16 +35,17 @@ public class ImgurAPI implements IApi {
     private static String _secret = "aef3b44d9985f67134e0ab82bbaddb2e7d95f7f8";
     private static String _searchLink = "https://api.imgur.com/3/gallery/search/time/";
     private Context _ctx = null;
-    private IToken token = null;
+    private IToken _token = null;
+    private IApi _api = this;
 
     public ImgurAPI(Context ctx) {
         _ctx = ctx;
         String str = _ctx.getSharedPreferences("tokens", 0).getString("ImgurToken", null);
         if (str != null) {
             try {
-                token = ImgurToken.Parse(new JSONObject(str));
-                Log.d("TAG", "ImgurAPI: " + token.getToken());
-                Log.d("TAG", "ImgurAPI: " + token.getAuthType());
+                _token = ImgurToken.Parse(new JSONObject(str));
+                Log.d("TAG", "ImgurAPI: " + _token.getToken());
+                Log.d("TAG", "ImgurAPI: " + _token.getAuthType());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -52,17 +53,17 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public String getAuthlink() {
+    public void getAuthlink(AuthLinkCallback callback) {
         String ret = "https://api.imgur.com/oauth2/authorize?"
                 + "client_id=" + _client_id
                 + "&response_type=" + "token"
                 + "&state=" + "";
-        return ret;
+        callback.onAuthLinkFinished(ret);
     }
 
     @Override
     public void connect(Context ctx) {
-        if (token == null) {
+        if (_token == null) {
             AuthDialog diag = new AuthDialog(ctx, this);
             diag.show();
         } else {
@@ -74,20 +75,25 @@ public class ImgurAPI implements IApi {
     public void auth(String query) {
         String[] ret = query.split("#");
         Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(ret[ret.length - 1]);
-        token = new ImgurToken(map);
-        _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", token.ToJson().toString()).apply();
+        _token = new ImgurToken(map);
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", _token.ToJson().toString()).apply();
         Toast.makeText(_ctx, "Auth Succeed", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public boolean isConnected() {
-        return (token != null);
+        return (_token != null);
+    }
+
+    @Override
+    public IToken getToken() {
+        return _token;
     }
 
     @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:").addHeader("Authorization", "Bearer " + token.getToken()).build();
+        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:").addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -107,7 +113,8 @@ public class ImgurAPI implements IApi {
                                 ji.getString("id"),
                                 ji.getString("topic"),
                                 ji.getString("account_url"),
-                                ji.getLong("account_id")
+                                ji.getLong("account_id"),
+                                _api
                         ));
                     }
                     callback.onGetThreadComplete(lThread);
@@ -121,7 +128,7 @@ public class ImgurAPI implements IApi {
     @Override
     public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:" + tags).addHeader("Authorization", "Bearer " + token.getToken()).build();
+        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:" + tags).addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -141,7 +148,8 @@ public class ImgurAPI implements IApi {
                                 ji.getString("id"),
                                 ji.getString("topic"),
                                 ji.getString("account_url"),
-                                ji.getLong("account_id")
+                                ji.getLong("account_id"),
+                                _api
                         ));
                     }
                     callback.onGetThreadComplete(lThread);

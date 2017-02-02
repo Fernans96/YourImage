@@ -7,4 +7,8 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.user;
 public interface IUser {
     public String getPictureLink();
     public String getUsername();
+
+    public interface GetUserCallback {
+        public void OnGetUserFinished(IUser user);
+    }
 }

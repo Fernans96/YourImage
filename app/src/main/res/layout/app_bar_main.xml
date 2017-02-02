@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="eu.epitech.fernan_s.msa_m.yourimage.MainActivity">
+    tools:context="eu.epitech.fernan_s.msa_m.yourimage.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

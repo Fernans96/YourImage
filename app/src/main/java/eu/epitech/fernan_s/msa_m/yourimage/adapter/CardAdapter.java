@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
 
-import eu.epitech.fernan_s.msa_m.yourimage.ImageActivity;
+import java.util.List;
+
+import eu.epitech.fernan_s.msa_m.yourimage.activity.ImageActivity;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 
 /**
@@ -21,7 +25,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
     private Context _context;
-    private ArrayList<IThread> _data;
+    private List<IThread> _data;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView TextTitle, TextDesc;
@@ -45,7 +49,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
         }
     }
 
-    public CardAdapter(ArrayList<IThread> treads){
+    public CardAdapter(List<IThread> treads){
         _data = treads;
     }
     @Override
@@ -53,19 +57,32 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_cardview, parent, false);
 
-
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(CardAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final CardAdapter.ViewHolder holder, int position) {
         holder.TextTitle.setText(_data.get(position).getTitle());
         holder.TextDesc.setText(_data.get(position).getDesc());
+        _data.get(position).getImages(new IImage.getImageCallback() {
+            @Override
+            public void onGetImageFinished(final List<IImage> lThread) {
+                if (lThread.size() > 0) {
+                    Handler handler = new Handler(_context.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Glide.with(_context).load(lThread.get(0).getLink()).into(holder.ImageContent);
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return _data.size();
     }
 }

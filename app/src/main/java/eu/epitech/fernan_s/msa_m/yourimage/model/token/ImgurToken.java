@@ -60,6 +60,11 @@ public class ImgurToken implements IToken {
     }
 
     @Override
+    public String getSecret() {
+        return "";
+    }
+
+    @Override
     public JSONObject ToJson() {
         JSONObject ret = new JSONObject();
 

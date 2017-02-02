@@ -10,8 +10,8 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.user.IUser;
  */
 
 public interface IThread {
-    public List<IImage> getImages();
-    public IUser getAuthor();
+    public void getImages(IImage.getImageCallback callback);
+    public void getAuthor(IUser.GetUserCallback callback);
     public String getTitle();
     public String getDesc();
 
