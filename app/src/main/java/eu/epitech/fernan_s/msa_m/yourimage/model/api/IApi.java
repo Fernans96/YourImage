@@ -1,6 +1,9 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+
+import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
@@ -17,7 +20,7 @@ public interface IApi {
     public IToken getToken();
     public void getThread(int page, IThread.GetThreadCallback callback);
     public void getThread(String tags, int page, IThread.GetThreadCallback callback);
-    public void SendPic(String pic);
+    public void SendPic(String Title, String Desc, List<Bitmap> images);
     public void Fav(int id);
     public void unFav(int id);
     public void getFavs(int page, IThread.GetThreadCallback callback);

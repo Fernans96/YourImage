@@ -1,6 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,20 +11,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import eu.epitech.fernan_s.msa_m.yourimage.singletone.SHttpClient;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.ImgurToken;
+import eu.epitech.fernan_s.msa_m.yourimage.singletone.SHttpClient;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -161,8 +167,47 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void SendPic(String pic) {
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+        Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = SHttpClient.getInstance().getClient();
+                    {
+                        RequestBody body = new FormBody.Builder()
+                                .add("title", URLEncoder.encode(Title, "UTF-8"))
+                                .add("description", URLEncoder.encode(Desc, "UTF-8"))
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://api.imgur.com/3/album")
+                                .post(body)
+                                .addHeader("Authorization", "Bearer " + _token.getToken())
+                                .build();
+                        Response res = client.newCall(request).execute();
+                        if (!res.isSuccessful())
+                            return;
+                        String sres = res.body().string();
 
+                    }
+                    for (Bitmap img : images) {
+                        RequestBody body = new FormBody.Builder()
+                                .add("image", URLEncoder.encode(ImagesTools.toBase64(img), "UTF-8"))
+                                .add("name", URLEncoder.encode(Title + ".jpg", "UTF-8"))
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://api.imgur.com/3/upload")
+                                .post(body)
+                                .addHeader("Authorization", "Bearer " + _token.getToken())
+                                .build();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        th.start();
     }
 
     @Override

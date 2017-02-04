@@ -1,6 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
@@ -160,7 +162,7 @@ public class FlikrAPI implements IApi {
     }
 
     @Override
-    public void SendPic(String pic) {
+    public void SendPic(String Title, String Desc, List<Bitmap> images) {
 
     }
 
