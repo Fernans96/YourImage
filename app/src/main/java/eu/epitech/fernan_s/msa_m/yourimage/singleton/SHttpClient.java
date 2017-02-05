@@ -1,4 +1,4 @@
-package eu.epitech.fernan_s.msa_m.yourimage.singletone;
+package eu.epitech.fernan_s.msa_m.yourimage.singleton;
 
 import okhttp3.OkHttpClient;
 

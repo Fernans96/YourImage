@@ -13,7 +13,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.ImgurImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.IUser;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.ImgurUser;
-import eu.epitech.fernan_s.msa_m.yourimage.singletone.SHttpClient;
+import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

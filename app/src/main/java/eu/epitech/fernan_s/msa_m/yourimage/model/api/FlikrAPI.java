@@ -7,23 +7,26 @@ import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
+import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
-import eu.epitech.fernan_s.msa_m.yourimage.model.token.ImgurToken;
-import eu.epitech.fernan_s.msa_m.yourimage.singletone.SHttpClient;
+import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
-import oauth.signpost.http.HttpParameters;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -139,10 +142,10 @@ public class FlikrAPI implements IApi {
     }
 
     @Override
-    public void getThread(int page, IThread.GetThreadCallback callback) {
+    public void getThread(int page, final IThread.GetThreadCallback callback) {
         String url = "https://api.flickr.com/services/rest/?";
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(url + "method=flickr.photos.getRecent&api_key=" + CONSUMER_KEY).build();
+        Request request = new Request.Builder().url(url + "method=flickr.photos.getRecent&api_key=" + CONSUMER_KEY + "&format=json&page=" + page).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -151,14 +154,72 @@ public class FlikrAPI implements IApi {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                List<IThread> lThread = new ArrayList<>();
                 String str = response.body().string();
+                str = str.substring(16, str.length() - 1);
+                try {
+                    JSONObject jo = new JSONObject(str);
+                    JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
+                    for (int i = 0; i < photos.length(); i++) {
+                        JSONObject joo = photos.getJSONObject(i);
+                        lThread.add(new FlickrThread(
+                                joo.getString("owner"),
+                                joo.getString("id"),
+                                joo.getString("title"),
+                                joo.getString("secret"),
+                                joo.getString("server")
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
     }
 
     @Override
-    public void getThread(String tags, int page, IThread.GetThreadCallback callback) {
+    public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
+        String url = "https://api.flickr.com/services/rest/?";
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = null;
+        try {
+            request = new Request.Builder().url(url + "method=flickr.photos.search&api_key=" + CONSUMER_KEY + "&format=json&text=" + URLEncoder.encode(tags, "UTF-8") + "&page=" + page).build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                List<IThread> lThread = new ArrayList<>();
+                String str = response.body().string();
+                str = str.substring(16, str.length() - 1);
+                try {
+                    JSONObject jo = new JSONObject(str);
+                    JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
+                    for (int i = 0; i < photos.length(); i++) {
+                        JSONObject joo = photos.getJSONObject(i);
+                        lThread.add(new FlickrThread(
+                                joo.getString("owner"),
+                                joo.getString("id"),
+                                joo.getString("title"),
+                                joo.getString("secret"),
+                                joo.getString("server")
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     @Override
