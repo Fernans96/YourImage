@@ -38,15 +38,15 @@ import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
  * Created by quent on 02/02/2017.
  */
 
-public class FlikrAPI implements IApi {
-    private static String CONSUMER_KEY = "e98a6d1cf67c79b5a3ab18dc675cc68b";
-    private static String CONSUMER_SECRET = "c2a30235b6af3616";
+public class FlickrAPI implements IApi {
+    public static String CONSUMER_KEY = "e98a6d1cf67c79b5a3ab18dc675cc68b";
+    public static String CONSUMER_SECRET = "c2a30235b6af3616";
     private String temp_secret = "";
     private String temp_token = "";
     private IToken _token;
     private Context _ctx;
 
-    public FlikrAPI(Context ctx) {
+    public FlickrAPI(Context ctx) {
         _ctx = ctx;
         String str = _ctx.getSharedPreferences("tokens", 0).getString("FlickrToken", null);
         if (str != null) {
@@ -156,7 +156,7 @@ public class FlikrAPI implements IApi {
             public void onResponse(Call call, Response response) throws IOException {
                 List<IThread> lThread = new ArrayList<>();
                 String str = response.body().string();
-                str = str.substring(16, str.length() - 1);
+                str = str.substring(14, str.length() - 1);
                 try {
                     JSONObject jo = new JSONObject(str);
                     JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
@@ -165,9 +165,7 @@ public class FlikrAPI implements IApi {
                         lThread.add(new FlickrThread(
                                 joo.getString("owner"),
                                 joo.getString("id"),
-                                joo.getString("title"),
-                                joo.getString("secret"),
-                                joo.getString("server")
+                                joo.getString("title")
                         ));
                     }
                     callback.onGetThreadComplete(lThread);
@@ -199,7 +197,7 @@ public class FlikrAPI implements IApi {
             public void onResponse(Call call, Response response) throws IOException {
                 List<IThread> lThread = new ArrayList<>();
                 String str = response.body().string();
-                str = str.substring(16, str.length() - 1);
+                str = str.substring(14, str.length() - 1);
                 try {
                     JSONObject jo = new JSONObject(str);
                     JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
@@ -208,9 +206,7 @@ public class FlikrAPI implements IApi {
                         lThread.add(new FlickrThread(
                                 joo.getString("owner"),
                                 joo.getString("id"),
-                                joo.getString("title"),
-                                joo.getString("secret"),
-                                joo.getString("server")
+                                joo.getString("title")
                         ));
                     }
                     callback.onGetThreadComplete(lThread);

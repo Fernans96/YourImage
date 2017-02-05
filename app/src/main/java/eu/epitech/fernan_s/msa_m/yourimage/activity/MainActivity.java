@@ -3,10 +3,8 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.stfalcon.multiimageview.MultiImageView;
@@ -27,8 +24,7 @@ import java.util.List;
 import eu.epitech.fernan_s.msa_m.yourimage.EndlessRecyclerViewScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
-import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
-import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlikrAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
@@ -72,14 +68,14 @@ public class MainActivity extends AppCompatActivity
         fab = (FloatingActionButton) findViewById(R.id.fab);
         _lapi = new ArrayList<>();
         _lapi.add(new ImgurAPI(this));
-        _lapi.add(new FlikrAPI(this));
+        _lapi.add(new FlickrAPI(this));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!_lapi.get(0).isConnected()) {
-                    _lapi.get(0).connect(view.getContext());
+                if (!_lapi.get(1).isConnected()) {
+                    _lapi.get(1).connect(view.getContext());
                 } else {
-                    _lapi.get(0).getThread(0, new IThread.GetThreadCallback() {
+                    _lapi.get(1).getThread(0, new IThread.GetThreadCallback() {
                         @Override
                         public void onGetThreadComplete(final List<IThread> lThread) {
                             runOnUiThread(new Runnable() {
