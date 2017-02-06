@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.thread;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +32,8 @@ public class ImgurThread implements IThread {
     private String _desc;
     private String _authorName;
     private long _authorId;
-    private IApi _api;
+    private String _Type = "Imgur";
+    private String _token;
 
     public ImgurThread(String title, String id, String desc, String authorName, long authorId, IApi api) {
         _title = title;
@@ -38,13 +41,13 @@ public class ImgurThread implements IThread {
         _desc = desc;
         _authorId = authorId;
         _authorName = authorName;
-        _api = api;
+        _token = api.getToken().getToken();
     }
 
     @Override
     public void getImages(final IImage.getImageCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.imgur.com/3/album/" + _id + "/images").addHeader("Authorization", "Bearer " + _api.getToken().getToken()).build();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/album/" + _id + "/images").addHeader("Authorization", "Bearer " + _token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -53,9 +56,10 @@ public class ImgurThread implements IThread {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
+                String str = response.body().string();
+                Log.d("Blabla", str);
                 try {
-                    JSONObject obj = new JSONObject(response.body().string());
+                    JSONObject obj = new JSONObject(str);
                     JSONArray arr = obj.getJSONArray("data");
                     List<IImage> limage = new ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {

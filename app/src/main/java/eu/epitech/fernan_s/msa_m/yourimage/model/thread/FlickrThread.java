@@ -27,6 +27,7 @@ public class FlickrThread implements IThread {
     String _owner_id;
     String _id;
     String _title;
+    String _Type = "Flickr";
 
     public FlickrThread(String owner_id, String id, String title) {
         _id = id;

@@ -72,10 +72,10 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!_lapi.get(1).isConnected()) {
-                    _lapi.get(1).connect(view.getContext());
+                if (!_lapi.get(0).isConnected()) {
+                    _lapi.get(0).connect(view.getContext());
                 } else {
-                    _lapi.get(1).getThread(0, new IThread.GetThreadCallback() {
+                    _lapi.get(0).getThread(0, new IThread.GetThreadCallback() {
                         @Override
                         public void onGetThreadComplete(final List<IThread> lThread) {
                             runOnUiThread(new Runnable() {

@@ -10,4 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="eu.epitech.fernan_s.msa_m.yourimage.activity.ImageActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/tmp_image"
+        />
+
 </RelativeLayout>

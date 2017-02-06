@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -42,7 +46,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     Intent intent = new Intent(_context, ImageActivity.class);
+                    Gson gson = new Gson();
+
+                    intent.putExtra("thread", gson.toJson(_data.get(getAdapterPosition())));
                     _context.startActivity(intent);
                 }
             });
@@ -52,6 +60,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
     public CardAdapter(List<IThread> treads){
         _data = treads;
     }
+
     @Override
     public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
@@ -73,7 +82,24 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Glide.with(_context).load(lThread.get(0).getLink()).into(holder.ImageContent);
+                            String uri = lThread.get(0).getLink();
+                            final String extension = uri.substring(uri.lastIndexOf("."));
+                            if (extension.equals(".gif"))
+                                Glide
+                                        .with(_context)
+                                        .load(lThread.get(0).getLink())
+                                        .asGif()
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .skipMemoryCache(true)
+                                        .placeholder(R.drawable.interrogation_karai)
+                                        .into(holder.ImageContent);
+                            else {
+                                Glide
+                                        .with(_context)
+                                        .load(lThread.get(0).getLink())
+                                        .placeholder(R.drawable.interrogation_karai)
+                                        .into(holder.ImageContent);
+                            }
                         }
                     });
                 }
