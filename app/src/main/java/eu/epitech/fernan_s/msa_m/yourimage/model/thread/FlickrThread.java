@@ -67,7 +67,6 @@ public class FlickrThread implements IThread {
                     lim.add(img);
                     callback.onGetImageFinished(lim);
                 } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -86,5 +85,10 @@ public class FlickrThread implements IThread {
     @Override
     public String getDesc() {
         return "FlickrPictures";
+    }
+
+    @Override
+    public String getType() {
+        return _Type;
     }
 }

@@ -72,26 +72,6 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!_lapi.get(0).isConnected()) {
-                    _lapi.get(0).connect(view.getContext());
-                } else {
-                    _lapi.get(0).getThread(0, new IThread.GetThreadCallback() {
-                        @Override
-                        public void onGetThreadComplete(final List<IThread> lThread) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    int old = treads.size();
-                                    treads.addAll(lThread);
-                                    cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                                }
-                            });
-                        }
-                    });
-                }
-                /*if (!_lapi.get(1).isConnected()) {
-                    _lapi.get(1).connect(view.getContext());
-                }*/
             }
         });
 
@@ -104,7 +84,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View hView =  navigationView.getHeaderView(0);
+        View hView = navigationView.getHeaderView(0);
 
         MultiImageView multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         multiImageView.addImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_flickr));
@@ -145,11 +125,9 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (searchView.isSearchOpen()){
+        } else if (searchView.isSearchOpen()) {
             searchView.closeSearch();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

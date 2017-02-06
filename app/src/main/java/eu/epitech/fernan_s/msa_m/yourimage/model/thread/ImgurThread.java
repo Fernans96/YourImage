@@ -57,7 +57,6 @@ public class ImgurThread implements IThread {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String str = response.body().string();
-                Log.d("Blabla", str);
                 try {
                     JSONObject obj = new JSONObject(str);
                     JSONArray arr = obj.getJSONArray("data");
@@ -69,7 +68,6 @@ public class ImgurThread implements IThread {
                     }
                     callback.onGetImageFinished(limage);
                 } catch (JSONException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -88,5 +86,10 @@ public class ImgurThread implements IThread {
     @Override
     public String getDesc() {
         return _desc;
+    }
+
+    @Override
+    public String getType() {
+        return _Type;
     }
 }

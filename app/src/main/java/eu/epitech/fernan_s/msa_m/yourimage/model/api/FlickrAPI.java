@@ -24,13 +24,18 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer;
 
@@ -145,7 +150,7 @@ public class FlickrAPI implements IApi {
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         String url = "https://api.flickr.com/services/rest/?";
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(url + "method=flickr.photos.getRecent&api_key=" + CONSUMER_KEY + "&format=json&page=" + page).build();
+        Request request = new Request.Builder().url(url + "method=flickr.photos.getRecent&per_page=45&api_key=" + CONSUMER_KEY + "&format=json&page=" + page).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -183,7 +188,7 @@ public class FlickrAPI implements IApi {
         OkHttpClient client = SHttpClient.getInstance().getClient();
         Request request = null;
         try {
-            request = new Request.Builder().url(url + "method=flickr.photos.search&api_key=" + CONSUMER_KEY + "&format=json&text=" + URLEncoder.encode(tags, "UTF-8") + "&page=" + page).build();
+            request = new Request.Builder().url(url + "method=flickr.photos.search&per_page=45&api_key=" + CONSUMER_KEY + "&format=json&text=" + URLEncoder.encode(tags, "UTF-8") + "&page=" + page).build();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -219,8 +224,43 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void SendPic(String Title, String Desc, List<Bitmap> images) {
-
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+        Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = SHttpClient.getInstance().getClient();
+                OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+                consumer.setTokenWithSecret(temp_token, temp_secret);
+                try {
+                    for (Bitmap img : images) {
+                        RequestBody body = new MultipartBody.Builder()
+                                .addPart(Headers.of("Content-Disposition", "form-data; name=\"photo\"; filename=\"C:\\android.jpg\""), RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
+                                .addFormDataPart("title",Title)
+                                .addFormDataPart("description",Desc)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://api.imgur.com/3/upload")
+                                .post(body)
+                                .build();
+                        request = (Request) consumer.sign(request).unwrap();
+                        Response res = client.newCall(request).execute();
+                        if (!res.isSuccessful()) {
+                            Handler handler = new Handler(_ctx.getMainLooper());
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(_ctx, "Upload Failed", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
+                } catch (IOException | OAuthExpectationFailedException | OAuthMessageSignerException | OAuthCommunicationException e) {
+                }
+            }
+        });
+        th.start();
     }
 
     @Override

@@ -14,6 +14,7 @@ public interface IThread {
     public void getAuthor(IUser.GetUserCallback callback);
     public String getTitle();
     public String getDesc();
+    public String getType();
 
     public interface GetThreadCallback {
         public void onGetThreadComplete(List<IThread> lThread);

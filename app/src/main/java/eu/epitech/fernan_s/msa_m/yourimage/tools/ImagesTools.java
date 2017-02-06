@@ -16,4 +16,10 @@ public class ImagesTools {
         byte[] byteArray = byteArrayOutputStream .toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+
+    public static byte[] toByteArray(Bitmap b) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.JPEG, 70, byteArrayOutputStream);
+        return byteArrayOutputStream .toByteArray();
+    }
 }

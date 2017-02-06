@@ -111,6 +111,7 @@ public class ImgurAPI implements IApi {
                 try {
                     JSONObject obj = new JSONObject(response.body().string());
                     JSONArray arr = obj.getJSONArray("data");
+                    Log.d("Size Array", ""+ arr.length());
                     List<IThread> lThread = new ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject ji = arr.getJSONObject(i);
@@ -215,6 +216,7 @@ public class ImgurAPI implements IApi {
                             return;
                         }
                     }
+                    Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }
