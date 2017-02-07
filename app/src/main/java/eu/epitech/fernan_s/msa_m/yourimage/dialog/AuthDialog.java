@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.util.Log;
@@ -23,8 +24,9 @@ public class AuthDialog extends Dialog {
     private WebView _wv = null;
     private Dialog _diag = this;
     private ProgressBar progress;
+    private boolean _done = false;
 
-    public AuthDialog(final Context context, final IApi api) {
+    public AuthDialog(final Context context, final IApi api, final IApi.ConnectCallback callback) {
         super(context);
         this.setContentView(R.layout.authdialog);
 
@@ -49,6 +51,14 @@ public class AuthDialog extends Dialog {
             }
         });
 
+        this.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (!_done) {
+                    callback.onConnectFailed();
+                }
+            }
+        });
 
 
         _wv.setWebViewClient(new WebViewClient() {
@@ -64,7 +74,8 @@ public class AuthDialog extends Dialog {
                 progress.setVisibility(View.GONE);
                 view.setVisibility(View.VISIBLE);
                 if (url.contains("code=") || url.contains("oauth_verifier=") || url.contains("access_token=")) {
-                    api.auth(url);
+                    api.auth(url, callback);
+                    _done = true;
                     _diag.dismiss();
                 }
             }

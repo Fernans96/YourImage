@@ -95,13 +95,13 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void connect(Context ctx) {
-        AuthDialog diag = new AuthDialog(ctx, this);
+    public void connect(Context ctx, ConnectCallback callback) {
+        AuthDialog diag = new AuthDialog(ctx, this, callback);
         diag.show();
     }
 
     @Override
-    public void auth(String query) {
+    public void auth(String query, final ConnectCallback callback) {
         OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
         consumer.setTokenWithSecret(temp_token, temp_secret);
         Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(query.substring(18));
@@ -112,11 +112,12 @@ public class FlickrAPI implements IApi {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    callback.onConnectFailed();
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    callback.onConnectSuccess();
                     String str = response.body().string();
                     Log.d("rep", "onResponse: " + str);
                     Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(str);
@@ -132,6 +133,7 @@ public class FlickrAPI implements IApi {
                 }
             });
         } catch (OAuthMessageSignerException | OAuthExpectationFailedException | OAuthCommunicationException e) {
+            callback.onConnectFailed();
             e.printStackTrace();
         }
     }
@@ -144,6 +146,12 @@ public class FlickrAPI implements IApi {
     @Override
     public IToken getToken() {
         return _token;
+    }
+
+    @Override
+    public void RemoveToken() {
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("FlickrToken", null).apply();
+        _token = null;
     }
 
     @Override

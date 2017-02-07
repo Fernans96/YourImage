@@ -14,10 +14,11 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 
 public interface IApi {
     public void getAuthlink(AuthLinkCallback callback);
-    public void connect(Context ctx);
-    public void auth(String query);
+    public void connect(Context ctx, ConnectCallback callback);
+    public void auth(String query, ConnectCallback callback);
     public boolean isConnected();
     public IToken getToken();
+    public void RemoveToken();
     public void getThread(int page, IThread.GetThreadCallback callback);
     public void getThread(String tags, int page, IThread.GetThreadCallback callback);
     public void SendPic(String Title, String Desc, List<Bitmap> images);
@@ -28,5 +29,9 @@ public interface IApi {
     public String getName();
     public interface AuthLinkCallback {
         public void onAuthLinkFinished(String authlink);
+    }
+    public interface ConnectCallback {
+        public void onConnectSuccess();
+        public void onConnectFailed();
     }
 }

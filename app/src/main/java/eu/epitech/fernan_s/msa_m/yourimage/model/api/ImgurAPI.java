@@ -52,6 +52,7 @@ public class ImgurAPI implements IApi {
         if (str != null) {
             try {
                 _token = ImgurToken.Parse(new JSONObject(str));
+                Log.d("Token", "ImgurAPI: " + _token.getToken());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -68,9 +69,9 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void connect(Context ctx) {
+    public void connect(Context ctx, ConnectCallback callback) {
         if (_token == null) {
-            AuthDialog diag = new AuthDialog(ctx, this);
+            AuthDialog diag = new AuthDialog(ctx, this, callback);
             diag.show();
         } else {
             Toast.makeText(_ctx, "Already auth", Toast.LENGTH_LONG).show();
@@ -78,12 +79,13 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void auth(String query) {
+    public void auth(String query, ConnectCallback callback) {
         String[] ret = query.split("#");
         Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(ret[ret.length - 1]);
         _token = new ImgurToken(map);
         _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", _token.ToJson().toString()).apply();
         Toast.makeText(_ctx, "Auth Succeed", Toast.LENGTH_LONG).show();
+        callback.onConnectSuccess();
     }
 
     @Override
@@ -97,9 +99,15 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
+    public void RemoveToken() {
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", null).apply();
+        _token = null;
+    }
+
+    @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/time/"+ page +".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -135,7 +143,7 @@ public class ImgurAPI implements IApi {
     @Override
     public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_searchLink + page + "?q_any=title:" + tags).addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = new Request.Builder().url(_searchLink + page + "/?q_any=" + tags).addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

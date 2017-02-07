@@ -1,6 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,9 +12,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     private CardAdapter cardAdapter;
     private List<IApi> _lapi = null;
     private Context _ctx = this;
+    private String _query = "";
+
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -97,18 +102,26 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        RefreshApi();
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     public void init_search() {
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
+                Log.d("Tags", "onQueryTextSubmit: " + newText);
+                _query = newText;
+                UpdateAdapter();
                 return false;
             }
         });
@@ -133,13 +146,37 @@ public class MainActivity extends AppCompatActivity
 
 
         View hView = navigationView.getHeaderView(0);
+        Button btn = (Button) hView.findViewById(R.id.BtnAuth);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(_ctx, AuthActivity.class);
+                startActivityForResult(intent, 0);
+            }
+        });
+
 
         SwitchCompat lol = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
         lol.setOnCheckedChangeListener(list);
+        lol.setEnabled(new ImgurAPI(this).isConnected());
         lol = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
+        lol.setEnabled(new FlickrAPI(this).isConnected());
         lol.setOnCheckedChangeListener(list);
         MultiImageView multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
+    }
+
+    public void RefreshApi() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navigationView.getHeaderView(0);
+        SwitchCompat lol = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
+        boolean connected = new ImgurAPI(this).isConnected();
+        lol.setEnabled(connected);
+        lol.setChecked(lol.isChecked() && connected);
+        lol = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
+        connected = new FlickrAPI(this).isConnected();
+        lol.setEnabled(connected);
+        lol.setChecked(lol.isChecked() && connected);
     }
 
     @Override
@@ -201,15 +238,18 @@ public class MainActivity extends AppCompatActivity
         View hView = navigationView.getHeaderView(0);
         MultiImageView multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         multiImageView.clear();
+        final String current_str = _query;
         for (IApi api : _lapi) {
-            if (api.isConnected()) {
-                multiImageView.addImage(api.getIcon());
-                api.getThread(1, new IThread.GetThreadCallback() {
+            multiImageView.addImage(api.getIcon());
+            if (_query.isEmpty()) {
+                api.getThread(0, new IThread.GetThreadCallback() {
                     @Override
                     public void onGetThreadComplete(final List<IThread> lThread) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                if (!current_str.equals(_query))
+                                    return;
                                 int old = treads.size();
                                 treads.addAll(lThread);
                                 cardAdapter.notifyItemRangeInserted(old, lThread.size());
@@ -218,7 +258,21 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
             } else {
-                api.connect(this);
+                api.getThread(_query, 0, new IThread.GetThreadCallback() {
+                    @Override
+                    public void onGetThreadComplete(final List<IThread> lThread) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!current_str.equals(_query))
+                                    return;
+                                int old = treads.size();
+                                treads.addAll(lThread);
+                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                            }
+                        });
+                    }
+                });
             }
         }
     }
@@ -237,20 +291,35 @@ public class MainActivity extends AppCompatActivity
 
     public void loadNextDataFromApi(int page) {
         for (IApi api : _lapi) {
-            api.getThread(page + 1, new IThread.GetThreadCallback() {
-                @Override
-                public void onGetThreadComplete(final List<IThread> lThread) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            int old = treads.size();
-                            treads.addAll(lThread);
-                            cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                        }
-                    });
-                }
-            });
-
+            if (_query.isEmpty()) {
+                api.getThread(page, new IThread.GetThreadCallback() {
+                    @Override
+                    public void onGetThreadComplete(final List<IThread> lThread) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int old = treads.size();
+                                treads.addAll(lThread);
+                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                            }
+                        });
+                    }
+                });
+            } else {
+                api.getThread(_query, page, new IThread.GetThreadCallback() {
+                    @Override
+                    public void onGetThreadComplete(final List<IThread> lThread) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int old = treads.size();
+                                treads.addAll(lThread);
+                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                            }
+                        });
+                    }
+                });
+            }
         }
 
     }
