@@ -28,10 +28,11 @@ public class ScreenSlidePageFragment extends Fragment {
 // Store instance variables
     private String title;
     private int page;
+    private String desc;
     private String url;
 
     // newInstance constructor for creating fragment with arguments
-    public static ScreenSlidePageFragment newInstance(int page, String title, String url) {
+    public static ScreenSlidePageFragment newInstance(int page, String title, String url, String desc) {
         ScreenSlidePageFragment fragmentFirst = new ScreenSlidePageFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
@@ -55,9 +56,12 @@ public class ScreenSlidePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
-//        TextView tvLabel = (TextView) view.findViewById(R.id.tvLabel);
+        TextView tvTitle = (TextView) view.findViewById(R.id.image_title);
+        TextView tvDesc = (TextView) view.findViewById(R.id.image_desc);
 
         ImageView imageView =  (ImageView) view.findViewById(R.id.tmp_image);
+        tvTitle.setText(title);
+        tvDesc.setText(desc);
         final String extension = url.substring(url.lastIndexOf("."));
         if (extension.equals(".gif"))
             Glide

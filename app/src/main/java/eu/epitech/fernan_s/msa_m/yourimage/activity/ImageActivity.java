@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -51,6 +52,9 @@ public class ImageActivity extends AppCompatActivity {
 
 //        final ImageView imageView = (ImageView) findViewById(R.id.tmp_image);
         _ctx = this;
+        TextView textView = (TextView) findViewById(R.id.title_tread_image);
+        if(thread.getTitle() != null)
+            textView.setText(thread.getTitle());
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.viewPager);
@@ -61,8 +65,8 @@ public class ImageActivity extends AppCompatActivity {
         thread.getImages(new IImage.getImageCallback() {
             @Override
             public void onGetImageFinished(List<IImage> lThread) {
-                String uri = lThread.get(0).getLink();
-                Log.d("LOL", "finished");
+//                String uri = lThread.get(0).getLink();
+                Log.d("FRAG", "title of 0: " + lThread.get(0).getTitle());
                 mPagerAdapter.setLThread(lThread);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -75,6 +79,7 @@ public class ImageActivity extends AppCompatActivity {
         });
 
         // Attach the page change listener inside the activity
+/*
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             // This method will be invoked when a new page becomes selected.
@@ -97,6 +102,7 @@ public class ImageActivity extends AppCompatActivity {
                 // Code goes here
             }
         });
+*/
 
 /*        thread.getImages(new IImage.getImageCallback() {
             @Override
