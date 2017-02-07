@@ -68,6 +68,7 @@ public class ImgurThread implements IThread {
                     }
                     callback.onGetImageFinished(limage);
                 } catch (JSONException e) {
+                    return;
                 }
             }
         });

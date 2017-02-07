@@ -97,6 +97,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                                 Glide
                                         .with(_context)
                                         .load(lThread.get(0).getLink())
+                                        .skipMemoryCache(true)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                                         .placeholder(R.drawable.interrogation_karai)
                                         .into(holder.ImageContent);
                             }

@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
@@ -57,8 +59,6 @@ public class FlickrAPI implements IApi {
         if (str != null) {
             try {
                 _token = FlickrToken.Parse(new JSONObject(str));
-                Log.d("TAG", "FlickrApi: " + _token.getToken());
-                Log.d("TAG", "FlickrApi: " + _token.getSecret());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -175,7 +175,7 @@ public class FlickrAPI implements IApi {
                     }
                     callback.onGetThreadComplete(lThread);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    return;
                 }
 
             }
@@ -216,7 +216,7 @@ public class FlickrAPI implements IApi {
                     }
                     callback.onGetThreadComplete(lThread);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    return;
                 }
 
             }
@@ -274,7 +274,17 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
+    public Bitmap getIcon() {
+        return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.ic_flickr);
+    }
+
+    @Override
     public void getFavs(int page, IThread.GetThreadCallback callback) {
 
+    }
+
+    @Override
+    public String getName() {
+        return ("Flickr");
     }
 }
