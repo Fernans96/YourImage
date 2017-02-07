@@ -2,20 +2,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_imgur"
-        android:title="imgur"
-        app:actionLayout="@layout/menu_switch"
-        app:showAsAction="always"
-        >
-    </item>
-
-    <item
-        android:checkableBehavior="single"
-        android:id="@+id/menu_flickr"
-        android:title="flickr"
-        app:actionLayout="@layout/menu_switch"
-        app:showAsAction="always"
-        >
-    </item>
 </menu>

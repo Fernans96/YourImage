@@ -23,7 +23,9 @@ public interface IApi {
     public void SendPic(String Title, String Desc, List<Bitmap> images);
     public void Fav(int id);
     public void unFav(int id);
+    public Bitmap getIcon();
     public void getFavs(int page, IThread.GetThreadCallback callback);
+    public String getName();
     public interface AuthLinkCallback {
         public void onAuthLinkFinished(String authlink);
     }

@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.api;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
@@ -50,8 +52,6 @@ public class ImgurAPI implements IApi {
         if (str != null) {
             try {
                 _token = ImgurToken.Parse(new JSONObject(str));
-                Log.d("TAG", "ImgurAPI: " + _token.getToken());
-                Log.d("TAG", "ImgurAPI: " + _token.getAuthType());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -125,7 +125,7 @@ public class ImgurAPI implements IApi {
                     }
                     callback.onGetThreadComplete(lThread);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    return;
                 }
             }
         });
@@ -160,7 +160,7 @@ public class ImgurAPI implements IApi {
                     }
                     callback.onGetThreadComplete(lThread);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    return ;
                 }
             }
         });
@@ -215,8 +215,15 @@ public class ImgurAPI implements IApi {
                             return;
                         }
                     }
+                    Handler handler = new Handler(_ctx.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (IOException | JSONException e) {
-                    e.printStackTrace();
+                    return;
                 }
             }
         });
@@ -234,8 +241,18 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
+    public Bitmap getIcon() {
+        return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.ic_imgur);
+    }
+
+    @Override
     public void getFavs(int page, IThread.GetThreadCallback callback) {
 
+    }
+
+    @Override
+    public String getName() {
+        return ("Imgur");
     }
 
 }
