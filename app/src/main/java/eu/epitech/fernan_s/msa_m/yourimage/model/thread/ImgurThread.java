@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.ImgurImage;
+import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.IUser;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.ImgurUser;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
@@ -79,6 +81,11 @@ public class ImgurThread implements IThread {
         callback.OnGetUserFinished(new ImgurUser("", _authorName));
     }
 
+    public ImgurThread UpdateToken(IToken token) {
+        _token = token.getToken();
+        return this;
+    }
+
     @Override
     public String getTitle() {
         return _title;
@@ -92,5 +99,24 @@ public class ImgurThread implements IThread {
     @Override
     public String getType() {
         return _Type;
+    }
+
+    @Override
+    public String getID() {
+        return _id;
+    }
+
+    @Override
+    public void fav() {
+        ImgurFav fav = new ImgurFav(this);
+        fav.save();
+    }
+
+    @Override
+    public void unfav() {
+        List<ImgurFav> favs = ImgurFav.find(ImgurFav.class, "_ThreadID = ?", this._id);
+        for (ImgurFav fav : favs) {
+            fav.delete();
+        }
     }
 }

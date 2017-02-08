@@ -22,8 +22,6 @@ public interface IApi {
     public void getThread(int page, IThread.GetThreadCallback callback);
     public void getThread(String tags, int page, IThread.GetThreadCallback callback);
     public void SendPic(String Title, String Desc, List<Bitmap> images);
-    public void Fav(int id);
-    public void unFav(int id);
     public Bitmap getIcon();
     public void getFavs(int page, IThread.GetThreadCallback callback);
     public String getName();

@@ -21,6 +21,8 @@ import java.util.Map;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.FlickrFav;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
@@ -272,22 +274,18 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void Fav(int id) {
-
-    }
-
-    @Override
-    public void unFav(int id) {
-
-    }
-
-    @Override
     public Bitmap getIcon() {
         return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.ic_flickr);
     }
 
     @Override
     public void getFavs(int page, IThread.GetThreadCallback callback) {
+        List<FlickrFav> fav = FlickrFav.listAll(FlickrFav.class);
+        List<IThread> favs = new ArrayList<>();
+        for (FlickrFav f : fav) {
+            favs.add(f.getThread());
+        }
+        callback.onGetThreadComplete(favs);
 
     }
 

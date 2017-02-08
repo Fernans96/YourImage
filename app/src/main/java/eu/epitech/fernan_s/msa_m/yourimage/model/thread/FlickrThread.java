@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.FlickrFav;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.FlickrImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
+import eu.epitech.fernan_s.msa_m.yourimage.model.user.FlickrUser;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.IUser;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
 import okhttp3.Call;
@@ -74,7 +77,21 @@ public class FlickrThread implements IThread {
 
     @Override
     public void getAuthor(IUser.GetUserCallback callback) {
+        callback.OnGetUserFinished(new FlickrUser("", _owner_id));
+    }
 
+    @Override
+    public void fav() {
+        FlickrFav fav = new FlickrFav(this);
+        fav.save();
+    }
+
+    @Override
+    public void unfav() {
+        List<FlickrFav> favs = FlickrFav.find(FlickrFav.class, "_ThreadID = ?", this._id);
+        for (FlickrFav fav : favs) {
+            fav.delete();
+        }
     }
 
     @Override
@@ -90,5 +107,10 @@ public class FlickrThread implements IThread {
     @Override
     public String getType() {
         return _Type;
+    }
+
+    @Override
+    public String getID() {
+        return _id;
     }
 }

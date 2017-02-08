@@ -15,6 +15,9 @@ public interface IThread {
     public String getTitle();
     public String getDesc();
     public String getType();
+    public String getID();
+    public void fav();
+    public void unfav();
 
     public interface GetThreadCallback {
         public void onGetThreadComplete(List<IThread> lThread);
