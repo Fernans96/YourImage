@@ -4,10 +4,10 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Paramètres</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="action_authentication">Authenticate</string>
-    <string name="action_go_up">Go on the Top</string>
+    <string name="action_authentication">S\'authentifier</string>
+    <string name="action_go_up">Remonter au top</string>
 </resources>

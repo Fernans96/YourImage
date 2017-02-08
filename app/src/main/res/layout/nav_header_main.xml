@@ -47,14 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/FlickrSwitch"
-            android:text="FlickrSwitch"/>
+            android:text="Flickr"/>
 
     </LinearLayout>
-
-    <Button
-        android:text="Authenticate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/BtnAuth" />
 
 </LinearLayout>

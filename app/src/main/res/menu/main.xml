@@ -15,4 +15,13 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/action_authenticate"
+        android:title="@string/action_authentication"
+        />
+    <item
+        android:id="@+id/action_gotop"
+        android:title="@string/action_go_up"
+        />
+
 </menu>

@@ -33,7 +33,7 @@ public class ScreenSlidePagerAdapter  extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         Log.d("FRAG", "lol: " + _lThread.get(position).getTitle());
         if (_lThread != null)
-            return ScreenSlidePageFragment.newInstance(position, _lThread.get(position).getTitle(), _lThread.get(position).getLink(), _lThread.get(position).getDesc());
+            return ScreenSlidePageFragment.newInstance(position, _lThread.get(position).getLink());
         else
             return new ScreenSlidePageFragment();
     }

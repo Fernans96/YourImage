@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     tools:context="eu.epitech.fernan_s.msa_m.yourimage.ScreenSlidePageFragment">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="22dp"
-    android:maxLines="2"
-    android:id="@+id/image_title"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -16,12 +11,5 @@
         android:layout_gravity="center_vertical"
         android:id="@+id/tmp_image"
         />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:maxLines="5"
-        android:id="@+id/image_desc"/>
 
 </FrameLayout>

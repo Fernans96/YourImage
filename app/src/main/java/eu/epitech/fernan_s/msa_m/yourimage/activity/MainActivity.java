@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.stfalcon.multiimageview.MultiImageView;
 
@@ -37,10 +39,19 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
     private MaterialSearchView searchView;
     private RecyclerView recyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
     private List<IThread> treads;
+
+    private SwitchCompat switchCompatFlickr, switchCompatImgur;
+    private NavigationView navigationView;
+    private MultiImageView multiImageView;
+    private View hView;
+    private Gson gson;
+
     private CardAdapter cardAdapter;
     private List<IApi> _lapi = null;
     private Context _ctx = this;
@@ -69,14 +80,26 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        editor = preferences.edit();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         treads = new ArrayList<>();
+        gson = new Gson();
+
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        hView = navigationView.getHeaderView(0);
+        switchCompatImgur = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
+        switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
+        multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
+
         cardAdapter = new CardAdapter(treads);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -104,9 +127,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        RefreshApi();
-
         super.onActivityResult(requestCode, resultCode, data);
+        RefreshApi();
     }
 
     public void init_search() {
@@ -141,42 +163,33 @@ public class MainActivity extends AppCompatActivity
 
     public void init_api() {
         _lapi = new ArrayList<>();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
+        if (names == null)
+            names = new ArrayList<>();
 
+        switchCompatImgur.setOnCheckedChangeListener(list);
+        switchCompatImgur.setEnabled(new ImgurAPI(this).isConnected());
+        switchCompatFlickr.setEnabled(new FlickrAPI(this).isConnected());
+        switchCompatFlickr.setOnCheckedChangeListener(list);
 
-        View hView = navigationView.getHeaderView(0);
-        Button btn = (Button) hView.findViewById(R.id.BtnAuth);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(_ctx, AuthActivity.class);
-                startActivityForResult(intent, 0);
+        for (String s : names){
+            if (s.equals("Imgur")){
+                switchCompatImgur.setChecked(true);
             }
-        });
-
-
-        SwitchCompat lol = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
-        lol.setOnCheckedChangeListener(list);
-        lol.setEnabled(new ImgurAPI(this).isConnected());
-        lol = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
-        lol.setEnabled(new FlickrAPI(this).isConnected());
-        lol.setOnCheckedChangeListener(list);
-        MultiImageView multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
+            else if (s.equals("Flickr")){
+                switchCompatFlickr.setChecked(true);
+            }
+        }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
     }
 
     public void RefreshApi() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView = navigationView.getHeaderView(0);
-        SwitchCompat lol = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
         boolean connected = new ImgurAPI(this).isConnected();
-        lol.setEnabled(connected);
-        lol.setChecked(lol.isChecked() && connected);
-        lol = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
+        switchCompatImgur.setEnabled(connected);
+        switchCompatImgur.setChecked(switchCompatImgur.isChecked() && connected);
         connected = new FlickrAPI(this).isConnected();
-        lol.setEnabled(connected);
-        lol.setChecked(lol.isChecked() && connected);
+        switchCompatFlickr.setEnabled(connected);
+        switchCompatFlickr.setChecked(switchCompatFlickr.isChecked() && connected);
     }
 
     @Override
@@ -217,26 +230,59 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_reload:
                 UpdateAdapter();
                 break;
+            case R.id.action_authenticate:
+                Intent intent = new Intent(_ctx, AuthActivity.class);
+                startActivityForResult(intent, 0);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void setApis(){
+        ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
+        boolean add;
+        if (names == null)
+            names = new ArrayList<>();
+        for (int i = 0; i <_lapi.size(); i++){
+            add = true;
+            for (String s : names){
+                if (s.equals(_lapi.get(i).getName()))
+                    add = false;
+            }
+            if (add)
+                names.add(_lapi.get(i).getName());
+        }
+
+        String s = gson.toJson(names);
+        editor.putString("apis", s);
+        editor.apply();
+    }
+
+
     public void RemoveApi(String api) {
+        ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
+        if (names == null)
+             names = new ArrayList<>();
+
         for (int i = 0; i < _lapi.size(); i++) {
             if (_lapi.get(i).getName().equals(api)) {
+                if (names.size()>=i)
+                    names.remove(i);
                 _lapi.remove(i);
             }
         }
+        String s = gson.toJson(names);
+        editor.putString("apis", s);
+        editor.apply();
 
     }
 
     public void UpdateAdapter() {
         treads.clear();
+
         cardAdapter.notifyDataSetChanged();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View hView = navigationView.getHeaderView(0);
-        MultiImageView multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         multiImageView.clear();
         final String current_str = _query;
         for (IApi api : _lapi) {
@@ -245,6 +291,7 @@ public class MainActivity extends AppCompatActivity
                 api.getThread(0, new IThread.GetThreadCallback() {
                     @Override
                     public void onGetThreadComplete(final List<IThread> lThread) {
+                        setApis();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -261,6 +308,7 @@ public class MainActivity extends AppCompatActivity
                 api.getThread(_query, 0, new IThread.GetThreadCallback() {
                     @Override
                     public void onGetThreadComplete(final List<IThread> lThread) {
+                        setApis();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -277,17 +325,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        //UpdateAdapter();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     public void loadNextDataFromApi(int page) {
         for (IApi api : _lapi) {
