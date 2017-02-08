@@ -12,6 +12,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -42,6 +43,7 @@ dependencies {
     compile 'com.github.stfalcon:multiimageview:0.1'
     compile 'com.github.qiugang:EditTag:+'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support.test.espresso:espresso-core:2.2.2'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.google.code.gson:gson:2.4'
