@@ -234,6 +234,9 @@ public class MainActivity extends AppCompatActivity
                 Intent intent = new Intent(_ctx, AuthActivity.class);
                 startActivityForResult(intent, 0);
                 break;
+            case R.id.action_gotop:
+                recyclerView.scrollToPosition(0);
+                break;
 
         }
 

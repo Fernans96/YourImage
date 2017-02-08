@@ -84,7 +84,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                         public void run() {
                             String uri = lThread.get(0).getLink();
                             final String extension = uri.substring(uri.lastIndexOf("."));
-                            if (extension.equals(".gif"))
+                            if (extension.equals(".gif") || extension.equals(".gifv"))
                                 Glide
                                         .with(_context)
                                         .load(lThread.get(0).getLink())

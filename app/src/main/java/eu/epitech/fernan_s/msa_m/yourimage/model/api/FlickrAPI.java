@@ -275,7 +275,7 @@ public class FlickrAPI implements IApi {
 
     @Override
     public Bitmap getIcon() {
-        return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.ic_flickr);
+        return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.social_flickr_box);
     }
 
     @Override
