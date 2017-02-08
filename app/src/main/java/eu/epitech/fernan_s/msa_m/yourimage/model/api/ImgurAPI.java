@@ -20,6 +20,7 @@ import java.util.Map;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
@@ -240,23 +241,18 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void Fav(int id) {
-
-    }
-
-    @Override
-    public void unFav(int id) {
-
-    }
-
-    @Override
     public Bitmap getIcon() {
         return BitmapFactory.decodeResource(_ctx.getResources(), R.drawable.ic_imgur);
     }
 
     @Override
     public void getFavs(int page, IThread.GetThreadCallback callback) {
-
+        List<ImgurFav> fav = ImgurFav.listAll(ImgurFav.class);
+        List<IThread> favs = new ArrayList<>();
+        for (ImgurFav f : fav) {
+            favs.add(f.getThread().UpdateToken(_token));
+        }
+        callback.onGetThreadComplete(favs);
     }
 
     @Override

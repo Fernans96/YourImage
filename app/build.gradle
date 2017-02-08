@@ -47,5 +47,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.4'
     compile 'se.akerfeldt:okhttp-signpost:1.1.0'
     compile 'oauth.signpost:signpost-core:1.2.1.2'
+    compile 'com.github.satyan:sugar:1.4'
     testCompile 'junit:junit:4.12'
 }

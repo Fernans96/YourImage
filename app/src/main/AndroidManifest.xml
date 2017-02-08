@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="eu.epitech.fernan_s.msa_m.yourimage">
+    package="eu.epitech.fernan_s.msa_m.yourimage"
+    android:name="com.orm.SugarApp">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,6 +11,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="DATABASE" android:value="YourImage.db" />
+        <meta-data android:name="VERSION" android:value="2" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="eu.epitech.fernan_s.msa_m.yourimage" />
+
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
