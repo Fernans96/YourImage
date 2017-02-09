@@ -119,4 +119,10 @@ public class ImgurThread implements IThread {
             fav.delete();
         }
     }
+
+    @Override
+    public boolean isFav() {
+        List<ImgurFav> favs = ImgurFav.find(ImgurFav.class, "_ThreadID = ?", this._id);
+        return favs.size() > 0;
+    }
 }

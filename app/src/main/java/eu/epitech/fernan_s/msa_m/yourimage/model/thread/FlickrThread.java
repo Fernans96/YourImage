@@ -95,6 +95,12 @@ public class FlickrThread implements IThread {
     }
 
     @Override
+    public boolean isFav() {
+        List<FlickrFav> favs = FlickrFav.find(FlickrFav.class, "_ThreadID = ?", this._id);
+        return favs.size() > 0;
+    }
+
+    @Override
     public String getTitle() {
         return _title;
     }

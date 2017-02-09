@@ -18,6 +18,7 @@ public interface IThread {
     public String getID();
     public void fav();
     public void unfav();
+    public boolean isFav();
 
     public interface GetThreadCallback {
         public void onGetThreadComplete(List<IThread> lThread);
