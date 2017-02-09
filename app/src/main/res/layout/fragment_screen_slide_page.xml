@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="eu.epitech.fernan_s.msa_m.yourimage.ScreenSlidePageFragment">
+    tools:context="eu.epitech.fernan_s.msa_m.yourimage.fragment.ScreenSlidePageFragment">
 
 
     <ImageView

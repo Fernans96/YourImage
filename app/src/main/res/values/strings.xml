@@ -10,4 +10,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="action_authentication">Authenticate</string>
     <string name="action_go_up">Go on the Top</string>
+
+    <string name="fav">Favorites</string>
+    <string name="save">Save image</string>
+    <string name="saved">Image saved</string>
 </resources>

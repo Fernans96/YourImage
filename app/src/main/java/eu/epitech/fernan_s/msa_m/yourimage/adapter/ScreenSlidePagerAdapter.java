@@ -7,7 +7,7 @@ import android.util.Log;
 
 import java.util.List;
 
-import eu.epitech.fernan_s.msa_m.yourimage.ScreenSlidePageFragment;
+import eu.epitech.fernan_s.msa_m.yourimage.fragment.ScreenSlidePageFragment;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 
 /**
@@ -31,9 +31,9 @@ public class ScreenSlidePagerAdapter  extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.d("FRAG", "lol: " + _lThread.get(position).getTitle());
+        Log.d("FRAG", "lol: " + _lThread.get(position).getTitle() + " pos: " + position);
         if (_lThread != null)
-            return ScreenSlidePageFragment.newInstance(position, _lThread.get(position).getLink());
+            return ScreenSlidePageFragment.newInstance(position, _lThread.get(position).getLink(), NUM_PAGES);
         else
             return new ScreenSlidePageFragment();
     }

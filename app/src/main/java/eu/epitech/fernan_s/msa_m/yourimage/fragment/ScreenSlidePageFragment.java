@@ -1,7 +1,5 @@
-package eu.epitech.fernan_s.msa_m.yourimage;
+package eu.epitech.fernan_s.msa_m.yourimage.fragment;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,28 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import eu.epitech.fernan_s.msa_m.yourimage.R;
+
 
 public class ScreenSlidePageFragment extends Fragment {
 
-/*    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(
-                R.layout.fragment_screen_slide_page, container, false);
-
-        return rootView;
-    }*/
 // Store instance variables
     private int page;
     private String url;
 
     // newInstance constructor for creating fragment with arguments
-    public static ScreenSlidePageFragment newInstance(int page, String url) {
+    public static ScreenSlidePageFragment newInstance(int page, String url, int num_page) {
         ScreenSlidePageFragment fragmentFirst = new ScreenSlidePageFragment();
         Bundle args = new Bundle();
         args.putInt("page", page);
@@ -45,6 +36,7 @@ public class ScreenSlidePageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("page", 0);
         url = getArguments().getString("url");
+        Log.d("URL", url);
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -56,13 +48,14 @@ public class ScreenSlidePageFragment extends Fragment {
 
         ImageView imageView =  (ImageView) view.findViewById(R.id.tmp_image);
         final String extension = url.substring(url.lastIndexOf("."));
-        if (extension.equals(".gif"))
+        Log.d("URL", url);
+        if (extension.equals(".gif") || extension.equals(".gifv"))
             Glide
                     .with(this)
                     .load(url)
                     .asGif()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-//                    .skipMemoryCache(true)
+                    .skipMemoryCache(true)
                     .placeholder(R.drawable.interrogation_karai)
                     .into(imageView);
         else {
