@@ -10,19 +10,16 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
  */
 
 public class ImgurFav extends SugarRecord {
-    private ImgurThread _Thread;
-    private String _ThreadID;
+    ImgurThread _thread;
+
+    public ImgurFav() {}
 
     public ImgurFav(ImgurThread thread) {
-        _Thread = thread;
-        _ThreadID = thread.getID();
+        _thread = thread;
+        this.setId(Long.parseLong(_thread.getID(), 36));
     }
 
     public ImgurThread getThread() {
-        return _Thread;
-    }
-
-    public String getID() {
-        return _ThreadID;
+        return _thread;
     }
 }

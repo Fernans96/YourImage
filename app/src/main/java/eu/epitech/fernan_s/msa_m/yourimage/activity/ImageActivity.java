@@ -194,7 +194,7 @@ public class ImageActivity extends AppCompatActivity {
                     else{
                         menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                     }
-//                   thread.unfav();
+                   thread.unfav();
                 }
                 else {
                     menuItem.setChecked(true);
@@ -204,7 +204,7 @@ public class ImageActivity extends AppCompatActivity {
                     else{
                         menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                     }
-                    //thread.fav(); FaV fait crash ???
+                    thread.fav();
                 }
                 break;
             case R.id.action_save:

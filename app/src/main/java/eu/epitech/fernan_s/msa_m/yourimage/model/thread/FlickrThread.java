@@ -80,6 +80,7 @@ public class FlickrThread implements IThread {
         callback.OnGetUserFinished(new FlickrUser("", _owner_id));
     }
 
+
     @Override
     public void fav() {
         FlickrFav fav = new FlickrFav(this);
@@ -88,16 +89,17 @@ public class FlickrThread implements IThread {
 
     @Override
     public void unfav() {
-        List<FlickrFav> favs = FlickrFav.find(FlickrFav.class, "_ThreadID = ?", this._id);
-        for (FlickrFav fav : favs) {
-            fav.delete();
-        }
+        long id = Long.parseLong(_id, 10);
+        FlickrFav favs = FlickrFav.findById(FlickrFav.class, id);
+        if (favs != null)
+            favs.delete();
     }
 
     @Override
     public boolean isFav() {
-        List<FlickrFav> favs = FlickrFav.find(FlickrFav.class, "_ThreadID = ?", this._id);
-        return favs.size() > 0;
+        long id = Long.parseLong(_id, 10);
+        FlickrFav favs = FlickrFav.findById(FlickrFav.class, id);
+        return favs != null;
     }
 
     @Override

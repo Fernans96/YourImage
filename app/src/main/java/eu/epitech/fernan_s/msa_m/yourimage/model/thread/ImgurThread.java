@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
@@ -114,15 +115,19 @@ public class ImgurThread implements IThread {
 
     @Override
     public void unfav() {
-        List<ImgurFav> favs = ImgurFav.find(ImgurFav.class, "_ThreadID = ?", this._id);
-        for (ImgurFav fav : favs) {
-            fav.delete();
-        }
+        long id = Long.parseLong(_id, 36);
+        ImgurFav favs = ImgurFav.findById(ImgurFav.class, id);
+        if (favs != null)
+            favs.delete();
     }
 
     @Override
     public boolean isFav() {
-        List<ImgurFav> favs = ImgurFav.find(ImgurFav.class, "_ThreadID = ?", this._id);
-        return favs.size() > 0;
+        long id = Long.parseLong(_id, 36);
+        ImgurFav favs = ImgurFav.findById(ImgurFav.class, id);
+        if (favs != null) {
+            Log.d("BLAAAA", "isFav: " + favs.getId());
+        }
+        return favs != null;
     }
 }
