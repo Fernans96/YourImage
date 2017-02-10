@@ -17,29 +17,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.orm.SugarContext;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.ScreenSlidePagerAdapter;
@@ -53,16 +41,24 @@ public class ImageActivity extends AppCompatActivity {
     private TextView page_tv;
     private Context _ctx;
     private int nb_page;
+    private boolean isFav;
     private IThread thread;
     private List<IImage> lImage;
     private ScreenSlidePagerAdapter mPagerAdapter;
     private int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 4242;
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SugarContext.terminate();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-
+        SugarContext.init(this);
         String Jthread = getIntent().getStringExtra("thread");
         thread = null;
         try {
@@ -75,6 +71,9 @@ public class ImageActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        isFav = thread.isFav();
+        Log.d("WUT", "apres que le thread soit instance");
 
 //        final ImageView imageView = (ImageView) findViewById(R.id.tmp_image);
         _ctx = this;
@@ -146,6 +145,27 @@ public class ImageActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.getItem(1);
+
+        Log.d("WUT", "quand j'ai besoin que le thread soit instance");
+        if (isFav){
+            menuItem.setChecked(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_white_24dp));
+            }
+            else{
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+            }
+        }
+        else{
+            menuItem.setChecked(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_border_white_24dp));
+            }
+            else{
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+            }
+        }
         return true;
     }
 
