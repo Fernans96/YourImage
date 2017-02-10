@@ -10,4 +10,9 @@
     <color name="colorPrimary">#40058A</color>
     <color name="colorPrimaryDark">#28015A</color>
     <color name="colorAccent">#6026AA</color>
+
+
+    <color name="greyPrimary">#877A7A</color>
+    <color name="greyPrimaryDark">#595454</color>
+    <color name="greyAccent">#D0D0D0</color>
 </resources>

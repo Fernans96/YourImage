@@ -14,4 +14,8 @@
     <string name="fav">Favorites</string>
     <string name="save">Save image</string>
     <string name="saved">Image saved</string>
+
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="upload">Upload</string>
 </resources>

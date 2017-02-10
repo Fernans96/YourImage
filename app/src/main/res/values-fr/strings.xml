@@ -14,4 +14,8 @@
     <string name="fav">Favoris</string>
     <string name="save">Enregistrer</string>
     <string name="saved">Enregistrée !</string>
+
+    <string name="title">Titre</string>
+    <string name="desc">Description</string>
+    <string name="upload">Télécharger</string>
 </resources>
