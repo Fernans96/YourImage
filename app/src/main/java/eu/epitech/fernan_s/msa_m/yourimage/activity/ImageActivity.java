@@ -35,6 +35,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
+import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PixivThread;
 
 public class ImageActivity extends AppCompatActivity {
     private ViewPager mPager;
@@ -67,6 +68,8 @@ public class ImageActivity extends AppCompatActivity {
                 thread = new Gson().fromJson(Jthread, FlickrThread.class);
             } else if (type.equals("Imgur")) {
                 thread = new Gson().fromJson(Jthread, ImgurThread.class);
+            } else if (type.equals("Pixiv")) {
+                thread = new Gson().fromJson(Jthread, PixivThread.class);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -208,7 +211,7 @@ public class ImageActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.action_save:
-                String link = lImage.get(mPager.getCurrentItem()).getLink();
+                String link = lImage.get(mPager.getCurrentItem()).getLink().toStringUrl();
                 String [] picid = link.split("/");
                 String name = picid[picid.length -1];
                 Log.d("SAVE", "name: " + name);

@@ -12,6 +12,9 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.Headers;
+import com.bumptech.glide.load.model.LazyHeaders;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.activity.FullscreenActivity;
@@ -19,7 +22,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.activity.FullscreenActivity;
 
 public class ScreenSlidePageFragment extends Fragment {
 
-// Store instance variables
+    // Store instance variables
     private int page;
     private String url;
     private Context context;
@@ -50,7 +53,7 @@ public class ScreenSlidePageFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_screen_slide_page, container, false);
 
 
-        ImageView imageView =  (ImageView) view.findViewById(R.id.tmp_image);
+        ImageView imageView = (ImageView) view.findViewById(R.id.tmp_image);
         final String extension = url.substring(url.lastIndexOf("."));
         context = getContext();
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -62,10 +65,15 @@ public class ScreenSlidePageFragment extends Fragment {
             }
         });
         Log.d("URL", url);
+        LazyHeaders.Builder head = new LazyHeaders.Builder();
+        if (url.contains("pixiv")) {
+            head = head.addHeader("Referer", "http://www.pixiv.net/");
+        }
+        GlideUrl gurl = new GlideUrl(url, head.build());
         if (extension.equals(".gif") || extension.equals(".gifv"))
             Glide
                     .with(this)
-                    .load(url)
+                    .load(gurl)
                     .asGif()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .skipMemoryCache(true)
@@ -74,10 +82,10 @@ public class ScreenSlidePageFragment extends Fragment {
         else {
             Glide
                     .with(this)
-                    .load(url)
+                    .load(gurl)
                     .placeholder(R.drawable.interrogation_karai)
                     .into(imageView);
         }
-       return view;
+        return view;
     }
 }

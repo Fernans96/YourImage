@@ -83,7 +83,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            String uri = lThread.get(0).getLink();
+                            String uri = lThread.get(0).getLink().toStringUrl();
                             final String extension = uri.substring(uri.lastIndexOf("."));
                             Log.d("CARD", uri);
                             if (extension.equals(".gif") || extension.equals(".gifv"))

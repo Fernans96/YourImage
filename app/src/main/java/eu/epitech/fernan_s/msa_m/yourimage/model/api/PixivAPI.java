@@ -5,15 +5,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.UserPassDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
+import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PixivThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.PixivToken;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
@@ -76,7 +81,7 @@ public class PixivAPI implements IApi {
             _client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    callback.onConnectFailed();
                 }
 
                 @Override
@@ -133,13 +138,108 @@ public class PixivAPI implements IApi {
     }
 
     @Override
-    public void getThread(int page, IThread.GetThreadCallback callback) {
+    public void getThread(int page, final IThread.GetThreadCallback callback) {
+        String url = "https://public-api.secure.pixiv.net/v1/trends/works.json"
+                .concat("?page=" + (page + 1))
+                .concat("&per_page=" + 45)
+                .concat("&include_stats=" + "false")
+                .concat("&image_sizes=" + "large")
+                .concat("&profile_image_sizes=" + "px_170x170")
+                .concat("&include_sanity_level=" + "false")
+                .concat("&order=" + "desc")
+                .concat("&sort=" + "date");
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("UserAgent", "PixivIOSApp/5.8.3")
+                .addHeader("Referer", "http://spapi.pixiv.net/")
+                .addHeader("Authorization", "Bearer " + _token.getToken())
+                .build();
+        _client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string());
+                        JSONArray ret = obj.getJSONArray("response");
+                        List<IThread> lthread = new ArrayList<>();
+                        for (int i = 0; i < ret.length(); i++) {
+                            JSONObject current = ret.getJSONObject(i);
+                            lthread.add(new PixivThread(current.getString("title"),
+                                    "",
+                                    current.getString("id"),
+                                    current.getJSONObject("image_urls").getString("large"),
+                                    current.getInt("page_count")));
+                        }
+                        callback.onGetThreadComplete(lthread);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override
-    public void getThread(String tags, int page, IThread.GetThreadCallback callback) {
+    public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
 
+        String url = null;
+        try {
+            url = "https://public-api.secure.pixiv.net/v1/search/works.json"
+                    .concat("?page=" + (page + 1))
+                    .concat("&per_page=" + 45)
+                    .concat("&include_stats=" + "false")
+                    .concat("&image_sizes=" + "large")
+                    .concat("&profile_image_sizes=" + "px_170x170")
+                    .concat("&include_sanity_level=" + "false")
+                    .concat("&order=" + "desc")
+                    .concat("&sort=" + "date")
+                    .concat("&mode=" + "tag")
+                    .concat("&period=" + "all")
+                    .concat("&q=" + URLEncoder.encode(tags, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("UserAgent", "PixivIOSApp/5.8.3")
+                .addHeader("Referer", "http://spapi.pixiv.net/")
+                .addHeader("Authorization", "Bearer " + _token.getToken())
+                .build();
+        _client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        JSONObject obj = new JSONObject(response.body().string());
+                        JSONArray ret = obj.getJSONArray("response");
+                        List<IThread> lthread = new ArrayList<>();
+                        for (int i = 0; i < ret.length(); i++) {
+                            JSONObject current = ret.getJSONObject(i);
+                            lthread.add(new PixivThread(current.getString("title"),
+                                    "",
+                                    current.getString("id"),
+                                    current.getJSONObject("image_urls").getString("large"),
+                                    current.getInt("page_count")));
+                        }
+                        callback.onGetThreadComplete(lthread);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @Override

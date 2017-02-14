@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.image;
 
+import com.bumptech.glide.load.model.GlideUrl;
+
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 
 /**
@@ -18,8 +20,8 @@ public class FlickrImage implements IImage {
     }
 
     @Override
-    public String getLink() {
-        return _Link;
+    public GlideUrl getLink() {
+        return new GlideUrl(_Link);
     }
 
     @Override

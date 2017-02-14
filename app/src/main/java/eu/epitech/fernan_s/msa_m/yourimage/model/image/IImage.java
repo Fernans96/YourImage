@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.image;
 
+import com.bumptech.glide.load.model.GlideUrl;
+
 import java.util.List;
 
 /**
@@ -7,7 +9,7 @@ import java.util.List;
  */
 
 public interface IImage {
-    public String getLink();
+    public GlideUrl getLink();
     public String getTitle();
     public String getDesc();
 

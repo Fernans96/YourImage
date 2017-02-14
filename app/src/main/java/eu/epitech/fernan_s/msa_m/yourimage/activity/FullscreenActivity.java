@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.tools.TouchImageView;
@@ -47,11 +49,16 @@ public class FullscreenActivity extends Activity {
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
+        LazyHeaders.Builder head = new LazyHeaders.Builder();
+        if (url.contains("pixiv")) {
+            head = head.addHeader("Referer", "http://www.pixiv.net/");
+        }
+        GlideUrl gurl = new GlideUrl(url, head.build());
 
 
         Glide
                 .with(this)
-                .load(url)
+                .load(gurl)
                 .into(imgDisplay);
     }
 

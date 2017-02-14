@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.image;
 
+import com.bumptech.glide.load.model.GlideUrl;
+
 /**
  * Created by quent on 31/01/2017.
  */
@@ -16,8 +18,8 @@ public class ImgurImage implements IImage {
     }
 
     @Override
-    public String getLink() {
-        return _link;
+    public GlideUrl getLink() {
+        return new GlideUrl(_link);
     }
 
     @Override

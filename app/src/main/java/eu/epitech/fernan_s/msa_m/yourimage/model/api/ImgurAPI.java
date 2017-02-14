@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +145,12 @@ public class ImgurAPI implements IApi {
     @Override
     public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_searchLink + page + "/?q_any=" + tags).addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = null;
+        try {
+            request = new Request.Builder().url(_searchLink + page + "/?q_any=" + URLEncoder.encode(tags, "UTF-8")).addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
