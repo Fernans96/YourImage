@@ -54,7 +54,6 @@ public class ImgurAPI implements IApi {
         if (str != null) {
             try {
                 _token = ImgurToken.Parse(new JSONObject(str));
-                Log.d("Token", "ImgurAPI: " + _token.getToken());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -86,7 +85,6 @@ public class ImgurAPI implements IApi {
         Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(ret[ret.length - 1]);
         _token = new ImgurToken(map);
         _ctx.getSharedPreferences("tokens", 0).edit().putString("ImgurToken", _token.ToJson().toString()).apply();
-        Toast.makeText(_ctx, "Auth Succeed", Toast.LENGTH_LONG).show();
         callback.onConnectSuccess();
     }
 
@@ -121,7 +119,6 @@ public class ImgurAPI implements IApi {
                 try {
                     JSONObject obj = new JSONObject(response.body().string());
                     JSONArray arr = obj.getJSONArray("data");
-                    Log.d("Size Array", ""+ arr.length());
                     List<IThread> lThread = new ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
                         JSONObject ji = arr.getJSONObject(i);
@@ -149,7 +146,7 @@ public class ImgurAPI implements IApi {
         try {
             request = new Request.Builder().url(_searchLink + page + "/?q_any=" + URLEncoder.encode(tags, "UTF-8")).addHeader("Authorization", "Bearer " + _token.getToken()).build();
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            return;
         }
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -175,8 +172,8 @@ public class ImgurAPI implements IApi {
                         ));
                     }
                     callback.onGetThreadComplete(lThread);
-                } catch (JSONException e) {
-                    return ;
+                } catch (JSONException ignored) {
+
                 }
             }
         });
@@ -238,8 +235,7 @@ public class ImgurAPI implements IApi {
                             Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
                         }
                     });
-                } catch (IOException | JSONException e) {
-                    return;
+                } catch (IOException | JSONException ignored) {
                 }
             }
         });

@@ -130,4 +130,9 @@ public class ImgurThread implements IThread {
         }
         return favs != null;
     }
+
+    @Override
+    public String ShareLink() {
+        return "http://imgur.com/gallery/" + _id;
+    }
 }

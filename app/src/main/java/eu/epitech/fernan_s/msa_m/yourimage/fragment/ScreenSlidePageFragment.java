@@ -43,7 +43,6 @@ public class ScreenSlidePageFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("page", 0);
         url = getArguments().getString("url");
-        Log.d("URL", url);
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -64,7 +63,6 @@ public class ScreenSlidePageFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        Log.d("URL", url);
         LazyHeaders.Builder head = new LazyHeaders.Builder();
         if (url.contains("pixiv")) {
             head = head.addHeader("Referer", "http://www.pixiv.net/");

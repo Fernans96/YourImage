@@ -1,8 +1,10 @@
 package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -60,6 +63,13 @@ public class ImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
         SugarContext.init(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.ImageToolBar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_backspace_white_24dp);
+        toolbar.setOverflowIcon(ContextCompat.getDrawable(this, R.drawable.ic_more_vert_white_24dp));
         String Jthread = getIntent().getStringExtra("thread");
         thread = null;
         try {
@@ -76,33 +86,26 @@ public class ImageActivity extends AppCompatActivity {
         }
 
         isFav = thread.isFav();
-        Log.d("WUT", "apres que le thread soit instance");
 
-//        final ImageView imageView = (ImageView) findViewById(R.id.tmp_image);
         _ctx = this;
         TextView textView = (TextView) findViewById(R.id.title_tread_image);
         page_tv = (TextView) findViewById(R.id.page_text);
-        if(thread.getTitle() != null)
+        if (thread.getTitle() != null)
             textView.setText(thread.getTitle());
 
-        // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.viewPager);
-        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
 
         final ImageView imageView = (ImageView) mPager.findViewById(R.id.tmp_image);
-        //mPagerAdapter.setLThread(thread);
         thread.getImages(new IImage.getImageCallback() {
             @Override
             public void onGetImageFinished(List<IImage> lThread) {
-//                String uri = lThread.get(0).getLink();
-                Log.d("FRAG", "title of 0: " + lThread.get(0).getTitle());
                 nb_page = lThread.size();
                 lImage = lThread;
-                mPagerAdapter.setLThread(lThread);
+                mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager(), lThread);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (nb_page > 1){
+                        if (nb_page > 1) {
                             String pages = "1/" + nb_page;
                             page_tv.setText(pages);
                         }
@@ -113,33 +116,22 @@ public class ImageActivity extends AppCompatActivity {
             }
         });
 
-        // Attach the page change listener inside the activity
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            // This method will be invoked when a new page becomes selected.
             @Override
             public void onPageSelected(int position) {
-            if (nb_page >= 1){
-                String pages = (position + 1) + "/" + nb_page;
-                page_tv.setText(pages);
+                if (nb_page >= 1) {
+                    String pages = (position + 1) + "/" + nb_page;
+                    page_tv.setText(pages);
+                }
             }
-/*
-                Toast.makeText(ImageActivity.this,
-                        "Selected page position: " + position, Toast.LENGTH_SHORT).show();
-*/
-            }
-
-            // This method will be invoked when the current page is scrolled
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                // Code goes here
+
             }
 
-            // Called when the scroll state changes:
-            // SCROLL_STATE_IDLE, SCROLL_STATE_DRAGGING, SCROLL_STATE_SETTLING
             @Override
             public void onPageScrollStateChanged(int state) {
-                // Code goes here
+
             }
         });
 
@@ -148,25 +140,21 @@ public class ImageActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.getItem(1);
+        MenuItem menuItem = menu.findItem(R.id.action_fav);
 
-        Log.d("WUT", "quand j'ai besoin que le thread soit instance");
-        if (isFav){
+        if (isFav) {
             menuItem.setChecked(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_white_24dp));
+                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_white_24dp_1));
+            } else {
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp_1));
             }
-            else{
-                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
-            }
-        }
-        else{
+        } else {
             menuItem.setChecked(false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_border_white_24dp));
-            }
-            else{
-                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                menuItem.setIcon(getDrawable(R.drawable.ic_favorite_border_white_24dp_1));
+            } else {
+                menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp_1));
             }
         }
         return true;
@@ -189,38 +177,46 @@ public class ImageActivity extends AppCompatActivity {
         int id = menuItem.getItemId();
         switch (id) {
             case R.id.action_fav:
-                if(menuItem.isChecked()){
+                if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        menuItem.setIcon(getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                        menuItem.setIcon(getDrawable(R.drawable.ic_favorite_border_white_24dp_1));
+                    } else {
+                        menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp_1));
                     }
-                    else{
-                        menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
-                    }
-                   thread.unfav();
-                }
-                else {
+                    thread.unfav();
+                } else {
                     menuItem.setChecked(true);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        menuItem.setIcon(getDrawable(R.drawable.ic_favorite_white_24dp));
-                    }
-                    else{
-                        menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+                        menuItem.setIcon(getDrawable(R.drawable.ic_favorite_white_24dp_1));
+                    } else {
+                        menuItem.setIcon(getResources().getDrawable(R.drawable.ic_favorite_white_24dp_1));
                     }
                     thread.fav();
                 }
                 break;
             case R.id.action_save:
                 String link = lImage.get(mPager.getCurrentItem()).getLink().toStringUrl();
-                String [] picid = link.split("/");
-                String name = picid[picid.length -1];
-                Log.d("SAVE", "name: " + name);
+                String[] picid = link.split("/");
+                String name = picid[picid.length - 1];
                 file_download(link, name);
+                break;
+            case R.id.action_share:
+                String s_link = thread.ShareLink();
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "Shared with YourImage: \n" + s_link);
+                intent.putExtra(Intent.EXTRA_STREAM, s_link);
+                startActivity(intent);
+                break;
+            case android.R.id.home:
+                finish();
                 break;
         }
 
         return super.onOptionsItemSelected(menuItem);
     }
+
     public void file_download(String uRl, String name) {
 
         if (ContextCompat.checkSelfPermission(this,
@@ -244,6 +240,8 @@ public class ImageActivity extends AppCompatActivity {
             Uri downloadUri = Uri.parse(uRl);
             DownloadManager.Request request = new DownloadManager.Request(
                     downloadUri);
+            if (uRl.contains("pixiv"))
+                request.addRequestHeader("Referer", "http://www.pixiv.net/");
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI

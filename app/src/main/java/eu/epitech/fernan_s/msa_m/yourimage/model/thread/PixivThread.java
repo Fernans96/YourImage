@@ -34,7 +34,7 @@ public class PixivThread implements IThread {
     @Override
     public void getImages(IImage.getImageCallback callback) {
         List<IImage> images = new ArrayList<>();
-        for (int i = 0; i <= _page_nbr; i++) {
+        for (int i = 0; i < _page_nbr; i++) {
             images.add(new PixivImage(_pic.replace("p0", "p" + i), _title, _desc));
         }
         callback.onGetImageFinished(images);
@@ -87,5 +87,10 @@ public class PixivThread implements IThread {
             Log.d("BLAAAA", "isFav: " + favs.getId());
         }
         return favs != null;
+    }
+
+    @Override
+    public String ShareLink() {
+        return "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + _id;
     }
 }

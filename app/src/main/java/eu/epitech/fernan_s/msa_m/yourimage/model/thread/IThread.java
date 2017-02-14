@@ -19,6 +19,7 @@ public interface IThread {
     public void fav();
     public void unfav();
     public boolean isFav();
+    public String ShareLink();
 
     public interface GetThreadCallback {
         public void onGetThreadComplete(List<IThread> lThread);

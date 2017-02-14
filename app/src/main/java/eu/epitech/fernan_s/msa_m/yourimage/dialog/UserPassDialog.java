@@ -24,6 +24,7 @@ public class UserPassDialog extends AlertDialog.Builder  {
     private EditText _Password;
     private AlertDialog _Dialog;
     private IApi.ConnectCallback _callback;
+    private boolean done = false;
 
     public UserPassDialog(Context context, IApi api, IApi.ConnectCallback callback) {
         super(context);
@@ -56,6 +57,14 @@ public class UserPassDialog extends AlertDialog.Builder  {
     public void Show() {
         _Dialog.show();
         InitAuthBtn();
+        _Dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (!done) {
+                    _callback.onConnectFailed();
+                }
+            }
+        });
     }
 
     private void InitAuthBtn() {
@@ -70,6 +79,7 @@ public class UserPassDialog extends AlertDialog.Builder  {
                     e.printStackTrace();
                 }
                 _api.auth(obj.toString(), _callback);
+                done = true;
                 _Dialog.dismiss();
             }
         });

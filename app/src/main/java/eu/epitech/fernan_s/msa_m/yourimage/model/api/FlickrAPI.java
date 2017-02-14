@@ -84,7 +84,6 @@ public class FlickrAPI implements IApi {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String str = response.body().string();
-                    Log.d("rep", "onResponse: " + str);
                     Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(str);
                     temp_token = map.get("oauth_token");
                     temp_secret = map.get("oauth_token_secret");
@@ -121,14 +120,12 @@ public class FlickrAPI implements IApi {
                 public void onResponse(Call call, Response response) throws IOException {
                     callback.onConnectSuccess();
                     String str = response.body().string();
-                    Log.d("rep", "onResponse: " + str);
                     Map<String, String> map = Splitter.on('&').trimResults().withKeyValueSeparator("=").split(str);
                     _token = new FlickrToken(map);
                     Handler handler = new Handler(_ctx.getMainLooper());
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(_ctx, "Auth Succeed", Toast.LENGTH_LONG).show();
                             _ctx.getSharedPreferences("tokens", 0).edit().putString("FlickrToken", _token.ToJson().toString()).apply();
                         }
                     });

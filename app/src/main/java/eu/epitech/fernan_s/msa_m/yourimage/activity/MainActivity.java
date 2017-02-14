@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("Tags", "onQueryTextSubmit: " + newText);
                 _query = newText;
                 UpdateAdapter();
                 return false;

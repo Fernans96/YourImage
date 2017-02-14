@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_image"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EEEEEE"
+    tools:context="eu.epitech.fernan_s.msa_m.yourimage.activity.ImageActivity"
+    >
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FAFAFA"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/title_tread_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@android:style/TextAppearance.Medium"
+            android:maxLines="2"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/page_text"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            style="@android:style/TextAppearance.Medium"
+            android:textAlignment="center" />
+    </LinearLayout>
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/ImageToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+
+        android:elevation="5dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme" />
+
+</RelativeLayout>

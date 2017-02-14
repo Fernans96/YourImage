@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.fragment.ScreenSlidePageFragment;
@@ -14,30 +15,25 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
  * Created by matheo msa on 06/02/2017.
  */
 
-public class ScreenSlidePagerAdapter  extends FragmentStatePagerAdapter {
+public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
     int NUM_PAGES = 1;
-     List<IImage> _lThread = null;
+    List<Fragment> lfrag = null;
 
 
-    public ScreenSlidePagerAdapter(FragmentManager fm) {
+    public ScreenSlidePagerAdapter(FragmentManager fm, List<IImage> lThread) {
         super(fm);
-    }
-
-    public void setLThread(List<IImage> lThread){
-        _lThread = lThread;
         NUM_PAGES = lThread.size();
+        lfrag = new ArrayList<>();
+        for (int i = 0; i < NUM_PAGES; i++) {
+            lfrag.add(ScreenSlidePageFragment.newInstance(i, lThread.get(i).getLink().toStringUrl(), NUM_PAGES));
+        }
     }
 
 
     @Override
     public Fragment getItem(int position) {
-        Log.d("FRAG", "lol: " + _lThread.get(position).getTitle() + " pos: " + position);
-        if (_lThread != null)
-            return ScreenSlidePageFragment.newInstance(position, _lThread.get(position).getLink().toStringUrl(), NUM_PAGES);
-        else
-            return new ScreenSlidePageFragment();
+        return lfrag.get(position);
     }
-
 
 
     @Override

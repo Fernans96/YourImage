@@ -10,10 +10,8 @@
 
 
     <eu.epitech.fernan_s.msa_m.yourimage.tools.TouchImageView
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/touchImageView"
-        android:layout_marginBottom="55dp"
         android:layout_gravity="center_horizontal" />
 </FrameLayout>

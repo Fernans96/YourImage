@@ -103,6 +103,11 @@ public class FlickrThread implements IThread {
     }
 
     @Override
+    public String ShareLink() {
+        return "https://www.flickr.com/photos/" + _owner_id + "/" + _id;
+    }
+
+    @Override
     public String getTitle() {
         return _title;
     }
