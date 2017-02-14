@@ -52,7 +52,7 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected != null || selected.equals("none")){
+                if (selected != null && !selected.equals("none")){
                     Toast.makeText(context, "faut que ça up sur: " + selected, Toast.LENGTH_SHORT).show();
                 }
                 else {
