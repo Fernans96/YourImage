@@ -22,9 +22,9 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:maxLines="6"
-        android:text="lol\nlol\nlol\nlol\nlol\nici c'est la taille max de ligne"
+        android:layout_height="150dp"
+        android:maxLines="5"
+        android:text="lol\nlol\nlol\nlol\nici c'est la taille max de ligne"
         android:hint="@string/desc"/>
     <FrameLayout
         android:layout_width="200dp"
@@ -50,12 +50,25 @@
 
     </FrameLayout>
 
-
-    <Button
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="end"
-        android:id="@+id/upload_button"
-        android:text="@string/upload"/>
+        android:orientation="vertical"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:id="@+id/upload_button"
+            android:text="@string/upload"/>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="start"
+            android:id="@+id/spinner" />
+    </FrameLayout>
+
 </LinearLayout>

@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.activity.FullscreenActivity;
 
 
 public class ScreenSlidePageFragment extends Fragment {
@@ -19,6 +22,7 @@ public class ScreenSlidePageFragment extends Fragment {
 // Store instance variables
     private int page;
     private String url;
+    private Context context;
 
     // newInstance constructor for creating fragment with arguments
     public static ScreenSlidePageFragment newInstance(int page, String url, int num_page) {
@@ -48,6 +52,15 @@ public class ScreenSlidePageFragment extends Fragment {
 
         ImageView imageView =  (ImageView) view.findViewById(R.id.tmp_image);
         final String extension = url.substring(url.lastIndexOf("."));
+        context = getContext();
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, FullscreenActivity.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
+            }
+        });
         Log.d("URL", url);
         if (extension.equals(".gif") || extension.equals(".gifv"))
             Glide

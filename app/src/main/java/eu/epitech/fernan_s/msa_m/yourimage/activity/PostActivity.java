@@ -11,17 +11,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -29,6 +38,8 @@ public class PostActivity extends AppCompatActivity {
     private String type_image;
     private Uri imageuri;
     private Context context = this;
+    private String selected = null;
+    private List<IApi> lapi = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +52,53 @@ public class PostActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "faut que ça up", Toast.LENGTH_SHORT).show();
+                if (selected != null || selected.equals("none")){
+                    Toast.makeText(context, "faut que ça up sur: " + selected, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(context, R.string.cantUp, Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        // Spinner Drop down elements
+        lapi.add(new FlickrAPI(this));
+        lapi.add(new ImgurAPI(this));
+        lapi.add(new PixivAPI(this));
+        List<String> categories = new ArrayList<String>();
+        if (!lapi.get(0).isConnected() && !lapi.get(1).isConnected() && !lapi.get(2).isConnected())
+            categories.add("none");
+        if (lapi.get(0).isConnected())
+            categories.add("Flickr");
+        if (lapi.get(1).isConnected())
+            categories.add("Imgur");
+        if (lapi.get(2).isConnected())
+            categories.add("Pixiv");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+        // Spinner click listener
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selected = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
 
         Pics_btn.setOnClickListener(new View.OnClickListener() {
             @Override

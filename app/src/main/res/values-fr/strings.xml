@@ -18,4 +18,11 @@
     <string name="title">Titre</string>
     <string name="desc">Description</string>
     <string name="upload">Télécharger</string>
+
+    <string name="createbtn">Créer</string>
+    <string name="Auth">S\'authentifier</string>
+    <string name="cancelbtn">Annuler</string>
+
+
+    <string name="cantUp">Vous devez selectionner une api</string>
 </resources>

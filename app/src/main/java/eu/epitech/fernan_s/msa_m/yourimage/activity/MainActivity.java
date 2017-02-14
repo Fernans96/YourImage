@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     private List<IThread> treads;
 
     private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
+    private LinearLayout favbutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
     private View hView;
@@ -106,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
+        favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
 
         cardAdapter = new CardAdapter(treads);
 
@@ -114,6 +117,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(_ctx, PostActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        favbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(_ctx, FavActivity.class);
                 startActivity(intent);
             }
         });

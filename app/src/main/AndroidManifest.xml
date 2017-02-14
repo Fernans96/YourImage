@@ -38,7 +38,13 @@
         </activity>
         <activity android:name=".activity.ImageActivity" />
         <activity android:name=".activity.AuthActivity" />
-        <activity android:name=".activity.PostActivity"></activity>
+        <activity android:name=".activity.PostActivity" />
+        <activity
+            android:name=".activity.FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+        <!-- android:theme="@style/AppTheme.NoActionBar"/> -->
+        <activity android:name=".activity.FavActivity"></activity>
     </application>
 
 </manifest>
