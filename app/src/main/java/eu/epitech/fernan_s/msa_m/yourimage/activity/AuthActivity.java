@@ -1,12 +1,12 @@
 package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.content.Context;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,9 +18,10 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 
-public class AuthActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class AuthActivity extends AppCompatActivity implements View.OnClickListener{
     private List<IApi> lapi = new ArrayList<>();
-    Context _ctx = this;
+    private Context _ctx = this;
+    private ColorMatrixColorFilter filter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +30,33 @@ public class AuthActivity extends AppCompatActivity implements CompoundButton.On
         lapi.add(new ImgurAPI(this));
         lapi.add(new PixivAPI(this));
         setContentView(R.layout.activity_auth);
-        CheckBox check = (CheckBox) findViewById(R.id.CheckFlickr);
-        check.setChecked(lapi.get(0).isConnected());
-        check.setOnCheckedChangeListener(this);
-        check = (CheckBox) findViewById(R.id.CheckImgur);
-        check.setChecked(lapi.get(1).isConnected());
-        check.setOnCheckedChangeListener(this);
-        check = (CheckBox) findViewById(R.id.CheckPixiv);
-        check.setChecked(lapi.get(2).isConnected());
-        check.setOnCheckedChangeListener(this);
+
+
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.setSaturation(0);
+
+        filter = new ColorMatrixColorFilter(matrix);
+
+        ImageView imageView = (ImageView) findViewById(R.id.flickr_auth);
+        imageView.setTag(lapi.get(0).isConnected());
+        if (!lapi.get(0).isConnected())
+            imageView.setColorFilter(filter);
+        imageView.setOnClickListener(this);
+
+        imageView = (ImageView) findViewById(R.id.imgur_auth);
+        imageView.setTag(lapi.get(1).isConnected());
+        if (!lapi.get(1).isConnected())
+            imageView.setColorFilter(filter);
+        imageView.setOnClickListener(this);
+
+        imageView = (ImageView) findViewById(R.id.pixiv_auth);
+        imageView.setTag(lapi.get(2).isConnected());
+        if (!lapi.get(2).isConnected())
+            imageView.setColorFilter(filter);
+        imageView.setOnClickListener(this);
     }
 
-    public void CheckApi(final CompoundButton buttonView, boolean isChecked, int api) {
+    public void CheckApi(final ImageView buttonView, boolean isChecked, int api) {
         if (isChecked) {
             lapi.get(api).connect(this, new IApi.ConnectCallback() {
                 @Override
@@ -48,7 +64,9 @@ public class AuthActivity extends AppCompatActivity implements CompoundButton.On
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(_ctx, "Authentication Success", Toast.LENGTH_LONG).show();
+                            Toast.makeText(_ctx, "Authentication Success", Toast.LENGTH_SHORT).show();
+                            buttonView.setTag(true);
+                            buttonView.setColorFilter(null);
                         }
                     });
                 }
@@ -58,29 +76,36 @@ public class AuthActivity extends AppCompatActivity implements CompoundButton.On
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(_ctx, "Authentication Failed", Toast.LENGTH_LONG).show();
-                            buttonView.setChecked(false);
+                            Toast.makeText(_ctx, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            buttonView.setTag(false);
+                            buttonView.setColorFilter(filter);
                         }
                     });
                 }
             });
         } else {
+            Toast.makeText(_ctx, "Disconnect", Toast.LENGTH_SHORT).show();
             lapi.get(api).RemoveToken();
+            buttonView.setTag(false);
+            buttonView.setColorFilter(filter);
         }
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.CheckFlickr:
-                CheckApi(buttonView, isChecked,0);
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.flickr_auth:
+                CheckApi((ImageView)view, !(boolean)view.getTag(), 0);
                 break;
-            case R.id.CheckImgur:
-                CheckApi(buttonView, isChecked,1);
+
+            case R.id.imgur_auth:
+                CheckApi((ImageView)view, !(boolean)view.getTag(), 1);
                 break;
-            case R.id.CheckPixiv:
-                CheckApi(buttonView, isChecked,2);
+
+            case R.id.pixiv_auth:
+                CheckApi((ImageView)view, !(boolean)view.getTag(), 2);
                 break;
         }
     }
+
 }
