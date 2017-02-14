@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +14,6 @@ import java.util.List;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.UserPassDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
-import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.PixivToken;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
@@ -129,6 +127,8 @@ public class PixivAPI implements IApi {
 
     @Override
     public void RemoveToken() {
+
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("PixivToken", null).apply();
         _token = null;
     }
 
