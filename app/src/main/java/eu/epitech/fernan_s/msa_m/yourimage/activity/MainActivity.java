@@ -223,6 +223,9 @@ public class MainActivity extends AppCompatActivity
         connected = new FlickrAPI(this).isConnected();
         switchCompatFlickr.setEnabled(connected);
         switchCompatFlickr.setChecked(switchCompatFlickr.isChecked() && connected);
+        connected = new PixivAPI(this).isConnected();
+        switchCompatPixiv.setEnabled(connected);
+        switchCompatPixiv.setChecked(switchCompatPixiv.isChecked() && connected);
     }
 
     @Override
