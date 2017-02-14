@@ -16,7 +16,7 @@ public class FlickrFav extends SugarRecord {
 
     public FlickrFav(FlickrThread thread) {
         _thread = thread;
-        this.setId(Long.parseLong(_thread.getID(), 36));
+        this.setId(Long.parseLong(_thread.getID(), 10));
     }
 
     public FlickrThread getThread() {
