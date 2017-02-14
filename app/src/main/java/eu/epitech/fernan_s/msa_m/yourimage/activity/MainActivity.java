@@ -33,6 +33,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 
 public class MainActivity extends AppCompatActivity
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private List<IThread> treads;
 
-    private SwitchCompat switchCompatFlickr, switchCompatImgur;
+    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
     private View hView;
@@ -72,6 +73,12 @@ public class MainActivity extends AppCompatActivity
                     else
                         RemoveApi("Flickr");
                     break;
+                case R.id.PixivSwitch:
+                    if (b)
+                        _lapi.add(new PixivAPI(_ctx));
+                    else
+                        RemoveApi("Pixiv");
+                    break;
                 default:
                     break;
             }
@@ -97,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         hView = navigationView.getHeaderView(0);
         switchCompatImgur = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
         switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
+        switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
 
         cardAdapter = new CardAdapter(treads);
@@ -180,6 +188,8 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setEnabled(new ImgurAPI(this).isConnected());
         switchCompatFlickr.setEnabled(new FlickrAPI(this).isConnected());
         switchCompatFlickr.setOnCheckedChangeListener(list);
+        switchCompatPixiv.setEnabled(new PixivAPI(this).isConnected());
+        switchCompatPixiv.setOnCheckedChangeListener(list);
 
         for (String s : names){
             if (s.equals("Imgur")){
@@ -187,6 +197,9 @@ public class MainActivity extends AppCompatActivity
             }
             else if (s.equals("Flickr")){
                 switchCompatFlickr.setChecked(true);
+            }
+            else if (s.equals("Pixiv")){
+                switchCompatPixiv.setChecked(true);
             }
         }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);

@@ -18,4 +18,7 @@
     <string name="title">Title</string>
     <string name="desc">Description</string>
     <string name="upload">Upload</string>
+    <string name="createbtn">Create</string>
+    <string name="Auth">Auth</string>
+    <string name="cancelbtn">Cancel</string>
 </resources>
