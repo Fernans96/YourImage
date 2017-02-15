@@ -14,6 +14,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -32,13 +33,16 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 
-public class PostActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Bitmap post_pic = null;
     private String type_image;
     private Uri imageuri;
     private Context context = this;
-    private String selected = null;
+    private String selected_name = null;
+    private String title, desc;
+    private int selected_pos = -1;
+//    private List<Bitmap> imgs;
     private List<IApi> lapi = new ArrayList<>();
 
     @Override
@@ -48,12 +52,18 @@ public class PostActivity extends AppCompatActivity {
 
         FrameLayout Pics_btn = (FrameLayout) findViewById(R.id.pics_selector);
         Button button = (Button) findViewById(R.id.upload_button);
-
+        EditText editText = (EditText) findViewById(R.id.title_post);
+        title = getString(R.string.title);
+        desc = getString(R.string.desc);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected != null && !selected.equals("none")){
-                    Toast.makeText(context, "faut que ça up sur: " + selected, Toast.LENGTH_SHORT).show();
+                if (selected_name != null && !selected_name.equals("none") && post_pic != null){
+
+                    List<Bitmap> imgs = new ArrayList<Bitmap>();
+                    imgs.add(post_pic);
+                    lapi.get(selected_pos).SendPic(title, desc, imgs);
+                    Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(context, R.string.cantUp, Toast.LENGTH_SHORT).show();
@@ -90,7 +100,8 @@ public class PostActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selected = adapterView.getItemAtPosition(i).toString();
+                selected_name = adapterView.getItemAtPosition(i).toString();
+                selected_pos = i;
             }
 
             @Override
@@ -161,4 +172,16 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.title_post:
+                title = ((EditText)view).getText().toString();
+                break;
+            case R.id.desc_post:
+                desc = ((EditText)view).getText().toString();
+                break;
+        }
+
+    }
 }

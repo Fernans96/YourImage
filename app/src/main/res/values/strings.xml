@@ -23,6 +23,13 @@
     <string name="Auth">Auth</string>
     <string name="cancelbtn">Cancel</string>
 
-
     <string name="cantUp">You need to select an api</string>
+
+
+    <string name="authok">Authentication Success</string>
+    <string name="authfail">Authentication Failed</string>
+    <string name="confirDis">Are you sure you want to disconnect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
