@@ -18,13 +18,15 @@
         android:layout_height="wrap_content"
         android:hint="@string/title"
         android:maxLines="2"
+        android:id="@+id/title_post"
         android:gravity="center"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:maxLines="5"
-        android:text="lol\nlol\nlol\nlol\nici c'est la taille max de ligne"
+        android:id="@+id/desc_post"
+        android:gravity="center"
         android:hint="@string/desc"/>
     <FrameLayout
         android:layout_width="200dp"

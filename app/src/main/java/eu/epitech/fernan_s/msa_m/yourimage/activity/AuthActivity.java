@@ -1,8 +1,10 @@
 package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -56,7 +58,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setOnClickListener(this);
     }
 
-    public void CheckApi(final ImageView buttonView, boolean isChecked, int api) {
+    public void CheckApi(final ImageView buttonView, boolean isChecked, final int api) {
         if (isChecked) {
             lapi.get(api).connect(this, new IApi.ConnectCallback() {
                 @Override
@@ -64,7 +66,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(_ctx, "Authentication Success", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(_ctx, getString(R.string.authok), Toast.LENGTH_SHORT).show();
                             buttonView.setTag(true);
                             buttonView.setColorFilter(null);
                         }
@@ -76,7 +78,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(_ctx, "Authentication Failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(_ctx, getString(R.string.authfail), Toast.LENGTH_SHORT).show();
                             buttonView.setTag(false);
                             buttonView.setColorFilter(filter);
                         }
@@ -84,10 +86,19 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 }
             });
         } else {
-            Toast.makeText(_ctx, "Disconnect", Toast.LENGTH_SHORT).show();
-            lapi.get(api).RemoveToken();
-            buttonView.setTag(false);
-            buttonView.setColorFilter(filter);
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.confirDis))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Toast.makeText(_ctx, getString(R.string.disconnect), Toast.LENGTH_SHORT).show();
+                            lapi.get(api).RemoveToken();
+                            buttonView.setTag(false);
+                            buttonView.setColorFilter(filter);
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.no), null)
+                    .show();
         }
     }
 

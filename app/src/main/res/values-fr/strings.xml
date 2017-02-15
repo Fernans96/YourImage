@@ -25,4 +25,11 @@
 
 
     <string name="cantUp">Vous devez selectionner une api</string>
+
+    <string name="authok">Connexion avec succès</string>
+    <string name="authfail">Problème d\'authentification</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="confirDis">Êtes-vous sûr de vouloir vous déconnecter</string>
+    <string name="yes">Oui</string>
+    <string name="no">Non</string>
 </resources>

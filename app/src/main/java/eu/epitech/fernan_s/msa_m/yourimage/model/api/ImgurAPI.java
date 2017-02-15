@@ -199,7 +199,7 @@ public class ImgurAPI implements IApi {
                                 .build();
                         Response res = client.newCall(request).execute();
                         if (!res.isSuccessful()) {
-                            Toast.makeText(_ctx, "Upload Failed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(_ctx, "Upload Failed auth", Toast.LENGTH_LONG).show();
                             return;
                         }
                         String sres = res.body().string();
@@ -222,7 +222,7 @@ public class ImgurAPI implements IApi {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(_ctx, "Upload Failed", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(_ctx, "Upload Failed up", Toast.LENGTH_LONG).show();
                                 }
                             });
                             return;
