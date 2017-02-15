@@ -17,6 +17,8 @@ import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.UserPassDialog;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
+import eu.epitech.fernan_s.msa_m.yourimage.model.fav.PixivFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PixivThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
@@ -254,7 +256,12 @@ public class PixivAPI implements IApi {
 
     @Override
     public void getFavs(int page, IThread.GetThreadCallback callback) {
-
+        List<PixivFav> fav = PixivFav.listAll(PixivFav.class);
+        List<IThread> favs = new ArrayList<>();
+        for (PixivFav f : fav) {
+            favs.add(f.getThread());
+        }
+        callback.onGetThreadComplete(favs);
     }
 
     @Override

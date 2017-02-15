@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.fav;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
@@ -16,10 +18,13 @@ public class PixivFav extends SugarRecord {
 
     public PixivFav(PixivThread thread) {
         _thread = thread;
-        this.setId(Long.parseLong(_thread.getID(), 10));
+        long threadid = Long.parseLong(_thread.getID(), 10);
+        _thread.setId(threadid);
+        SugarRecord.save(_thread);
+        this.setId(threadid);
     }
 
     public PixivThread getThread() {
-        return _thread;
+        return SugarRecord.findById(PixivThread.class, getId());
     }
 }

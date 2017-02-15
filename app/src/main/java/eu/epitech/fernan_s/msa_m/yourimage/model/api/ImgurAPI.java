@@ -252,7 +252,9 @@ public class ImgurAPI implements IApi {
         List<ImgurFav> fav = ImgurFav.listAll(ImgurFav.class);
         List<IThread> favs = new ArrayList<>();
         for (ImgurFav f : fav) {
-            favs.add(f.getThread().UpdateToken(_token));
+            Log.d("ImgurFav", "getFavs: " + f.getId());
+            ImgurThread th = f.getThread();
+            favs.add(th.UpdateToken(_token));
         }
         callback.onGetThreadComplete(favs);
     }

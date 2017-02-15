@@ -2,6 +2,9 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.thread;
 
 import android.util.Log;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +18,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.user.IUser;
  * Created by quent on 14/02/2017.
  */
 
+@Table
 public class PixivThread implements IThread {
     String _title;
     String _desc;
@@ -22,6 +26,7 @@ public class PixivThread implements IThread {
     String _Type = "Pixiv";
     String _pic;
     int _page_nbr;
+    private Long id;
 
     public PixivThread(String title, String desc, String id, String pic, int PageNbr) {
         _title = title;
@@ -71,12 +76,22 @@ public class PixivThread implements IThread {
         fav.save();
     }
 
+    public PixivThread()  {
+
+    }
+
     @Override
     public void unfav() {
         long id = Long.parseLong(_id, 10);
         PixivFav favs = PixivFav.findById(PixivFav.class, id);
-        if (favs != null)
+        if (favs != null) {
+            SugarRecord.delete(favs.getThread());
             favs.delete();
+        }
+    }
+
+    public void setId(long aid) {
+        id = aid;
     }
 
     @Override

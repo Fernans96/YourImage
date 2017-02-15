@@ -1,5 +1,8 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.thread;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Table;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.fav.FlickrFav;
-import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.FlickrImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.user.FlickrUser;
@@ -26,11 +28,13 @@ import static eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI.CONSUMER_K
  * Created by quent on 05/02/2017.
  */
 
+@Table
 public class FlickrThread implements IThread {
     String _owner_id;
     String _id;
     String _title;
     String _Type = "Flickr";
+    private Long id;
 
     public FlickrThread(String owner_id, String id, String title) {
         _id = id;
@@ -87,12 +91,18 @@ public class FlickrThread implements IThread {
         fav.save();
     }
 
+    public FlickrThread() {
+
+    }
+
     @Override
     public void unfav() {
         long id = Long.parseLong(_id, 10);
         FlickrFav favs = FlickrFav.findById(FlickrFav.class, id);
-        if (favs != null)
+        if (favs != null) {
+            SugarRecord.delete(favs.getThread());
             favs.delete();
+        }
     }
 
     @Override
@@ -125,5 +135,9 @@ public class FlickrThread implements IThread {
     @Override
     public String getID() {
         return _id;
+    }
+
+    public void setId(long aid) {
+        id = aid;
     }
 }

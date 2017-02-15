@@ -2,13 +2,15 @@ package eu.epitech.fernan_s.msa_m.yourimage.model.thread;
 
 import android.util.Log;
 
+import com.orm.SugarRecord;
+import com.orm.dsl.Table;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
@@ -29,14 +31,19 @@ import okhttp3.Response;
  * Created by quent on 31/01/2017.
  */
 
+@Table
 public class ImgurThread implements IThread {
-    private String _id;
-    private String _title;
-    private String _desc;
-    private String _authorName;
-    private long _authorId;
-    private String _Type = "Imgur";
-    private String _token;
+    Long id;
+    String _id;
+    String _title;
+    String _desc;
+    String _authorName;
+    long _authorId;
+    String _Type = "Imgur";
+    String _token;
+
+
+    public ImgurThread(){}
 
     public ImgurThread(String title, String id, String desc, String authorName, long authorId, IApi api) {
         _title = title;
@@ -107,6 +114,10 @@ public class ImgurThread implements IThread {
         return _id;
     }
 
+    public void setId(long aid) {
+        id = aid;
+    }
+
     @Override
     public void fav() {
         ImgurFav fav = new ImgurFav(this);
@@ -117,8 +128,10 @@ public class ImgurThread implements IThread {
     public void unfav() {
         long id = Long.parseLong(_id, 36);
         ImgurFav favs = ImgurFav.findById(ImgurFav.class, id);
-        if (favs != null)
+        if (favs != null) {
+            SugarRecord.delete(favs.getThread());
             favs.delete();
+        }
     }
 
     @Override

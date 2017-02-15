@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.fav;
 
+import com.orm.SugarApp;
+import com.orm.SugarDb;
 import com.orm.SugarRecord;
 
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
@@ -16,10 +18,13 @@ public class FlickrFav extends SugarRecord {
 
     public FlickrFav(FlickrThread thread) {
         _thread = thread;
-        this.setId(Long.parseLong(_thread.getID(), 10));
+        long threadid = Long.parseLong(_thread.getID(), 10);
+        _thread.setId(threadid);
+        SugarRecord.save(_thread);
+        this.setId(threadid);
     }
 
     public FlickrThread getThread() {
-        return _thread;
+        return SugarRecord.findById(FlickrThread.class, getId());
     }
 }
