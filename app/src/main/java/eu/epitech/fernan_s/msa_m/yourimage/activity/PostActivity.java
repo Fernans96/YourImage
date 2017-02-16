@@ -32,6 +32,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.user.ImgurUser;
 
 public class PostActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -59,7 +60,6 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 if (selected_name != null && !selected_name.equals("none") && post_pic != null){
-
                     List<Bitmap> imgs = new ArrayList<Bitmap>();
                     imgs.add(post_pic);
                     lapi.get(selected_pos).SendPic(title, desc, imgs);
@@ -73,20 +73,25 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
 
         Spinner spinner = (Spinner) findViewById(R.id.spinner);
-
-        // Spinner Drop down elements
-        lapi.add(new FlickrAPI(this));
-        lapi.add(new ImgurAPI(this));
-        lapi.add(new PixivAPI(this));
         List<String> categories = new ArrayList<String>();
-        if (!lapi.get(0).isConnected() && !lapi.get(1).isConnected() && !lapi.get(2).isConnected())
-            categories.add("none");
-        if (lapi.get(0).isConnected())
-            categories.add("Flickr");
-        if (lapi.get(1).isConnected())
-            categories.add("Imgur");
-        if (lapi.get(2).isConnected())
-            categories.add("Pixiv");
+
+        IApi api = new FlickrAPI(this);
+        if (api.isConnected()) {
+            lapi.add(api);
+        }
+        api = new ImgurAPI(this);
+        if (api.isConnected()) {
+            lapi.add(api);
+        }
+        api = new PixivAPI(this);
+        if (api.isConnected()) {
+            lapi.add(api);
+        }
+
+        for (IApi iapi : lapi) {
+            categories.add(iapi.getName());
+        }
+
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
 

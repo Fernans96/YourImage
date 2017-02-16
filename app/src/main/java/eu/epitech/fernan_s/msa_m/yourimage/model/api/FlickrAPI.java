@@ -237,7 +237,7 @@ public class FlickrAPI implements IApi {
             public void run() {
                 OkHttpClient client = SHttpClient.getInstance().getClient();
                 OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-                consumer.setTokenWithSecret(temp_token, temp_secret);
+                consumer.setTokenWithSecret(_token.getToken(), _token.getSecret());
                 try {
                     for (Bitmap img : images) {
                         RequestBody body = new MultipartBody.Builder()
@@ -246,7 +246,7 @@ public class FlickrAPI implements IApi {
                                 .addFormDataPart("description",Desc)
                                 .build();
                         Request request = new Request.Builder()
-                                .url("https://api.imgur.com/3/upload")
+                                .url("https://up.flickr.com/services/upload/")
                                 .post(body)
                                 .build();
                         request = (Request) consumer.sign(request).unwrap();

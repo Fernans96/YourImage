@@ -31,6 +31,9 @@ import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -207,9 +210,9 @@ public class ImgurAPI implements IApi {
                     }
                     for (Bitmap img : images) {
                         RequestBody body = new FormBody.Builder()
-                                .add("image", URLEncoder.encode(ImagesTools.toBase64(img), "UTF-8"))
-                                .add("name", URLEncoder.encode(Title + ".jpg", "UTF-8"))
+                                .add("image", ImagesTools.toBase64(img))
                                 .add("album", album_id)
+                                .add("type", "base64")
                                 .build();
                         Request request = new Request.Builder()
                                 .url("https://api.imgur.com/3/upload")
