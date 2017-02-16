@@ -2,10 +2,8 @@ package eu.epitech.fernan_s.msa_m.yourimage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -73,7 +70,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, int position) {
-        Log.d("FAV", "dans le onBind");
         holder.TextTitle.setText(_data.get(position).getTitle());
         holder.TextDesc.setText(_data.get(position).getDesc());
         _data.get(position).getImages(new IImage.getImageCallback() {
@@ -108,7 +104,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                     });
                 }
                 else {
-                    Log.d("FAV", "iThread is empty");
                 }
             }
         });
