@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +27,7 @@ import com.stfalcon.multiimageview.MultiImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.epitech.fernan_s.msa_m.yourimage.EndlessRecyclerViewScrollListener;
+import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
+    private FloatingActionButton fab;
 
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         treads = new ArrayList<>();
         gson = new Gson();
 
-
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         hView = navigationView.getHeaderView(0);
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity
 
         cardAdapter = new CardAdapter(treads);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -139,6 +139,16 @@ public class MainActivity extends AppCompatActivity
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 loadNextDataFromApi(page);
+            }
+
+            @Override
+            public void onHide() {
+                fab.hide();
+            }
+
+            @Override
+            public void onShow() {
+                fab.show();
             }
         };
         // Adds the scroll listener to RecyclerView

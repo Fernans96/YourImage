@@ -73,6 +73,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, int position) {
+        Log.d("FAV", "dans le onBind");
         holder.TextTitle.setText(_data.get(position).getTitle());
         holder.TextDesc.setText(_data.get(position).getDesc());
         _data.get(position).getImages(new IImage.getImageCallback() {
@@ -105,6 +106,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder>{
                             }
                         }
                     });
+                }
+                else {
+                    Log.d("FAV", "iThread is empty");
                 }
             }
         });

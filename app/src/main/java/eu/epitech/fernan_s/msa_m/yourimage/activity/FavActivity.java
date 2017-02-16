@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
+import eu.epitech.fernan_s.msa_m.yourimage.listener.HidingScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -42,6 +44,17 @@ public class FavActivity extends AppCompatActivity {
         _lthread = new ArrayList<>();
         _adapter = new CardAdapter(_lthread);
         recyclerView.setAdapter(_adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // THIS IS IMPORTANT
+        recyclerView.addOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+
+            }
+            @Override
+            public void onShow() {
+
+            }
+        });
         initFav();
         LoadFav();
     }
@@ -62,16 +75,17 @@ public class FavActivity extends AppCompatActivity {
 
     private void LoadFav() {
         _lthread.clear();
+        _adapter.notifyDataSetChanged();
         for (IApi api : _lapi) {
             api.getFavs(0, new IThread.GetThreadCallback() {
                 @Override
-                public void onGetThreadComplete(List<IThread> lThread) {
-                    _lthread.addAll(lThread);
+                public void onGetThreadComplete(final List<IThread> lThread) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("qdsfqsfd", "run: " + _lthread.size());
-                            _adapter.notifyDataSetChanged();
+                            int old = _lthread.size();
+                            _lthread.addAll(lThread);
+                            _adapter.notifyItemRangeInserted(old, lThread.size());
                         }
                     });
                 }

@@ -1,4 +1,4 @@
-package eu.epitech.fernan_s.msa_m.yourimage;
+package eu.epitech.fernan_s.msa_m.yourimage.listener;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +17,10 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     private boolean loading = true;
     // Sets the starting page index
     private int startingPageIndex = 0;
+
+    private static final int HIDE_THRESHOLD = 10;
+    private int scrolledDistance = 0;
+    private boolean controlsVisible = true;
 
     RecyclerView.LayoutManager mLayoutManager;
 
@@ -91,6 +95,31 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             onLoadMore(currentPage, totalItemCount, view);
             loading = true;
         }
+
+
+        int firstVisibleItem = ((LinearLayoutManager) view.getLayoutManager()).findFirstVisibleItemPosition();
+        if (firstVisibleItem == 0) {
+            if(!controlsVisible) {
+                onShow();
+                controlsVisible = true;
+            }
+        } else {
+            if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
+                onHide();
+                controlsVisible = false;
+                scrolledDistance = 0;
+            } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
+                onShow();
+                controlsVisible = true;
+                scrolledDistance = 0;
+            }
+        }
+
+        if((controlsVisible && dy>0) || (!controlsVisible && dy<0)) {
+            scrolledDistance += dy;
+        }
+
+
     }
 
     // Call this method whenever performing new searches
@@ -102,5 +131,8 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
 
     // Defines the process for actually loading more data based on page
     public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
+
+    public abstract void onHide();
+    public abstract void onShow();
 
 }
