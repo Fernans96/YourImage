@@ -27,18 +27,19 @@ import com.stfalcon.multiimageview.MultiImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
+import eu.epitech.fernan_s.msa_m.yourimage.callback.BtnActivity;
+import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.ApisTools;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private MaterialSearchView searchView;
@@ -57,49 +58,34 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
-    private FloatingActionButton fab;
-
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-            switch (compoundButton.getId()) {
-                case R.id.ImgurSwitch:
-                    if (b)
-                        _lapi.add(new ImgurAPI(_ctx));
-                    else
-                        RemoveApi("Imgur");
-                    break;
-                case R.id.FlickrSwitch:
-                    if (b)
-                        _lapi.add(new FlickrAPI(_ctx));
-                    else
-                        RemoveApi("Flickr");
-                    break;
-                case R.id.PixivSwitch:
-                    if (b)
-                        _lapi.add(new PixivAPI(_ctx));
-                    else
-                        RemoveApi("Pixiv");
-                    break;
-                default:
-                    break;
+            IApi api = ApisTools.CreateInstance(compoundButton.getId(), _ctx);
+            if (b) {
+                _lapi.add(api);
+                setApis(api.getName());
+            } else {
+                RemoveApi(api.getName());
+            }
+            multiImageView.clear();
+            for (IApi a : _lapi) {
+                multiImageView.addImage(a.getIcon());
             }
             UpdateAdapter();
         }
     };
+    private FloatingActionButton fab;
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    private void initVariable() {
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         editor = preferences.edit();
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         treads = new ArrayList<>();
         gson = new Gson();
+    }
 
+    private void initItem() {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -109,29 +95,20 @@ public class MainActivity extends AppCompatActivity
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
-
         cardAdapter = new CardAdapter(treads);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+    }
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(_ctx, PostActivity.class);
-                startActivity(intent);
-            }
-        });
+    private void initBtn() {
+        fab.setOnClickListener(new BtnActivity(PostActivity.class, _ctx));
+        favbutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
+    }
 
-        favbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(_ctx, FavActivity.class);
-                startActivity(intent);
-            }
-        });
-
+    private void initrecyclerView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(cardAdapter);
+
         // Retain an instance so that you can call `resetState()` for fresh searches
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
@@ -153,14 +130,30 @@ public class MainActivity extends AppCompatActivity
         };
         // Adds the scroll listener to RecyclerView
         recyclerView.addOnScrollListener(scrollListener);
+    }
+
+    private void initDrawer() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        init_search();
-        init_api();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initVariable();
+        initItem();
+        initBtn();
+        init_search();
+        init_api();
+        initrecyclerView();
+        initDrawer();
     }
 
     @Override
@@ -184,18 +177,6 @@ public class MainActivity extends AppCompatActivity
                 return false;
             }
         });
-        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override
-            public void onSearchViewShown() {
-
-            }
-
-            @Override
-            public void onSearchViewClosed() {
-
-            }
-        });
-
     }
 
     public void init_api() {
@@ -211,14 +192,12 @@ public class MainActivity extends AppCompatActivity
         switchCompatPixiv.setEnabled(new PixivAPI(this).isConnected());
         switchCompatPixiv.setOnCheckedChangeListener(list);
 
-        for (String s : names){
-            if (s.equals("Imgur")){
+        for (String s : names) {
+            if (s.equals("Imgur")) {
                 switchCompatImgur.setChecked(true);
-            }
-            else if (s.equals("Flickr")){
+            } else if (s.equals("Flickr")) {
                 switchCompatFlickr.setChecked(true);
-            }
-            else if (s.equals("Pixiv")){
+            } else if (s.equals("Pixiv")) {
                 switchCompatPixiv.setChecked(true);
             }
         }
@@ -288,21 +267,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void setApis(){
+    private void setApis(String api_name) {
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
-        boolean add;
         if (names == null)
             names = new ArrayList<>();
-        for (int i = 0; i <_lapi.size(); i++){
-            add = true;
-            for (String s : names){
-                if (s.equals(_lapi.get(i).getName()))
-                    add = false;
-            }
-            if (add)
-                names.add(_lapi.get(i).getName());
-        }
-
+        names.add(api_name);
         String s = gson.toJson(names);
         editor.putString("apis", s);
         editor.apply();
@@ -312,65 +281,41 @@ public class MainActivity extends AppCompatActivity
     public void RemoveApi(String api) {
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
         if (names == null)
-             names = new ArrayList<>();
+            names = new ArrayList<>();
 
         for (int i = 0; i < _lapi.size(); i++) {
             if (_lapi.get(i).getName().equals(api)) {
-                if (names.size()>=i)
-                    names.remove(i);
                 _lapi.remove(i);
             }
+        }
+        names.clear();
+        for (IApi a : _lapi) {
+            names.add(a.getName());
         }
         String s = gson.toJson(names);
         editor.putString("apis", s);
         editor.apply();
-
     }
 
     public void UpdateAdapter() {
         treads.clear();
-
         cardAdapter.notifyDataSetChanged();
-        multiImageView.clear();
         final String current_str = _query;
-        for (IApi api : _lapi) {
-            multiImageView.addImage(api.getIcon());
-            if (_query.isEmpty()) {
-                api.getThread(0, new IThread.GetThreadCallback() {
+        ApisTools.MultipleGetThread(_lapi, 0, _query, new IThread.GetThreadCallback() {
+            @Override
+            public void onGetThreadComplete(final List<IThread> lThread) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onGetThreadComplete(final List<IThread> lThread) {
-                        setApis();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!current_str.equals(_query))
-                                    return;
-                                int old = treads.size();
-                                treads.addAll(lThread);
-                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                            }
-                        });
-                    }
-                });
-            } else {
-                api.getThread(_query, 0, new IThread.GetThreadCallback() {
-                    @Override
-                    public void onGetThreadComplete(final List<IThread> lThread) {
-                        setApis();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!current_str.equals(_query))
-                                    return;
-                                int old = treads.size();
-                                treads.addAll(lThread);
-                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                            }
-                        });
+                    public void run() {
+                        if (!current_str.equals(_query))
+                            return;
+                        int old = treads.size();
+                        treads.addAll(lThread);
+                        cardAdapter.notifyItemRangeInserted(old, lThread.size());
                     }
                 });
             }
-        }
+        });
     }
 
 
@@ -382,37 +327,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void loadNextDataFromApi(int page) {
-        for (IApi api : _lapi) {
-            if (_query.isEmpty()) {
-                api.getThread(page, new IThread.GetThreadCallback() {
+        ApisTools.MultipleGetThread(_lapi, page, _query, new IThread.GetThreadCallback() {
+            @Override
+            public void onGetThreadComplete(final List<IThread> lThread) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onGetThreadComplete(final List<IThread> lThread) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int old = treads.size();
-                                treads.addAll(lThread);
-                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                            }
-                        });
-                    }
-                });
-            } else {
-                api.getThread(_query, page, new IThread.GetThreadCallback() {
-                    @Override
-                    public void onGetThreadComplete(final List<IThread> lThread) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int old = treads.size();
-                                treads.addAll(lThread);
-                                cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                            }
-                        });
+                    public void run() {
+                        int old = treads.size();
+                        treads.addAll(lThread);
+                        cardAdapter.notifyItemRangeInserted(old, lThread.size());
                     }
                 });
             }
-        }
-
+        });
     }
 }

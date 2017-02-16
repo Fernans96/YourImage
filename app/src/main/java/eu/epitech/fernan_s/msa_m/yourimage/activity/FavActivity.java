@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.orm.SugarContext;
@@ -37,7 +38,6 @@ public class FavActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav);
         SugarContext.init(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_fav);
         _lthread = new ArrayList<>();
@@ -61,6 +61,7 @@ public class FavActivity extends AppCompatActivity {
     private void initFav() {
         Gson gson = new Gson();
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
+        Log.d("BLABLA", "initFav: " + preferences.getString("apis", ""));
         for (String api : names) {
             if (api.equals("Flickr")) {
                 _lapi.add(new FlickrAPI(this));
@@ -79,6 +80,7 @@ public class FavActivity extends AppCompatActivity {
             api.getFavs(0, new IThread.GetThreadCallback() {
                 @Override
                 public void onGetThreadComplete(final List<IThread> lThread) {
+                    Log.d("BLABLA", "onGetThreadComplete: " + lThread.size());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
