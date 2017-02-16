@@ -22,7 +22,6 @@ import java.util.Map;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.AuthDialog;
 import eu.epitech.fernan_s.msa_m.yourimage.model.fav.FlickrFav;
-import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
@@ -232,6 +231,7 @@ public class FlickrAPI implements IApi {
 
     @Override
     public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+        /* Debut du cancer
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -241,16 +241,19 @@ public class FlickrAPI implements IApi {
                 try {
                     for (Bitmap img : images) {
                         RequestBody body = new MultipartBody.Builder()
-                                .addPart(Headers.of("Content-Disposition", "form-data; name=\"photo\"; filename=\"C:\\android.jpg\""), RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
-                                .addFormDataPart("title",Title)
-                                .addFormDataPart("description",Desc)
+                                .addFormDataPart("title", Title)
+                                .addFormDataPart("description", Desc)
+                                .addFormDataPart("photo", "android.jpg", RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
                                 .build();
                         Request request = new Request.Builder()
                                 .url("https://up.flickr.com/services/upload/")
                                 .post(body)
                                 .build();
                         request = (Request) consumer.sign(request).unwrap();
+                        Log.d("TAG", "run: " + request.body().contentLength());
                         Response res = client.newCall(request).execute();
+                        String str = res.body().string();
+                        Log.d("STR", "run: " + str);
                         if (!res.isSuccessful()) {
                             Handler handler = new Handler(_ctx.getMainLooper());
                             handler.post(new Runnable() {
@@ -262,12 +265,20 @@ public class FlickrAPI implements IApi {
                             return;
                         }
                     }
-                    Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
+                    Handler handler = new Handler(_ctx.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 } catch (IOException | OAuthExpectationFailedException | OAuthMessageSignerException | OAuthCommunicationException e) {
                 }
             }
         });
         th.start();
+        fin du cancer
+        */ // les commentaires soigne le cancer
     }
 
     @Override
@@ -289,5 +300,10 @@ public class FlickrAPI implements IApi {
     @Override
     public String getName() {
         return ("Flickr");
+    }
+
+    @Override
+    public boolean CanUpload() {
+        return false;
     }
 }

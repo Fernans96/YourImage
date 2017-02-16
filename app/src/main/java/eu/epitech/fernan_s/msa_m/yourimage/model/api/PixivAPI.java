@@ -17,7 +17,6 @@ import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.dialog.UserPassDialog;
-import eu.epitech.fernan_s.msa_m.yourimage.model.fav.ImgurFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.fav.PixivFav;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PixivThread;
@@ -267,5 +266,10 @@ public class PixivAPI implements IApi {
     @Override
     public String getName() {
         return "Pixiv";
+    }
+
+    @Override
+    public boolean CanUpload() {
+        return false;
     }
 }

@@ -76,15 +76,15 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         List<String> categories = new ArrayList<String>();
 
         IApi api = new FlickrAPI(this);
-        if (api.isConnected()) {
+        if (api.CanUpload() && api.isConnected()) {
             lapi.add(api);
         }
         api = new ImgurAPI(this);
-        if (api.isConnected()) {
+        if (api.CanUpload() && api.isConnected()) {
             lapi.add(api);
         }
         api = new PixivAPI(this);
-        if (api.isConnected()) {
+        if (api.CanUpload() && api.isConnected()) {
             lapi.add(api);
         }
 

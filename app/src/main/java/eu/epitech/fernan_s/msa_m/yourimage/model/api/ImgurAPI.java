@@ -267,4 +267,9 @@ public class ImgurAPI implements IApi {
         return ("Imgur");
     }
 
+    @Override
+    public boolean CanUpload() {
+        return true;
+    }
+
 }

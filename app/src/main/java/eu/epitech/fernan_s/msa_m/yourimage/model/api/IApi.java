@@ -25,6 +25,7 @@ public interface IApi {
     public Bitmap getIcon();
     public void getFavs(int page, IThread.GetThreadCallback callback);
     public String getName();
+    public boolean CanUpload();
     public interface AuthLinkCallback {
         public void onAuthLinkFinished(String authlink);
     }
