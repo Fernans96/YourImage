@@ -63,6 +63,34 @@ public class PixivAPI implements IApi {
         dialog.Show();
     }
 
+
+    //Only for Instrumented Test (Synchronous HTTP call)
+    public void SyncAuth(String username, String password) throws Exception {
+        RequestBody body = new FormBody.Builder()
+                .add("client_id", "bYGKuGVw91e0NMfPGp44euvGt59s")
+                .add("client_secret", "HP3RmkgAmEGro0gn1x9ioawQE8WMfvLXDz3ZqxpK")
+                .add("grant_type", "password")
+                .add("username", username)
+                .add("password", password)
+                .build();
+        Request request = new Request.Builder()
+                .url("https://oauth.secure.pixiv.net/auth/token")
+                .header("Referer", "http://www.pixiv.net/")
+                .post(body)
+                .build();
+        Response resp = _client.newCall(request).execute();
+        String ret = resp.body().string();
+        JSONObject jobj = new JSONObject(ret);
+        jobj = jobj.getJSONObject("response");
+        _token = new PixivToken(
+                jobj.getJSONObject("user").getString("name"),
+                jobj.getString("access_token"),
+                jobj.getString("refresh_token"),
+                jobj.getString("token_type")
+        );
+        _ctx.getSharedPreferences("tokens", 0).edit().putString("PixivToken", _token.ToJson().toString()).apply();
+    }
+
     @Override
     public void auth(String query, final ConnectCallback callback) {
         try {
@@ -184,6 +212,40 @@ public class PixivAPI implements IApi {
                 }
             }
         });
+    }
+
+    //Only for Instrumented Test (Synchronous HTTP call)
+    public List<PixivThread> Sync_GetThread(int page) throws Exception {
+        String url = "https://public-api.secure.pixiv.net/v1/trends/works.json"
+                .concat("?page=" + (page + 1))
+                .concat("&per_page=" + 45)
+                .concat("&include_stats=" + "false")
+                .concat("&image_sizes=" + "large")
+                .concat("&profile_image_sizes=" + "px_170x170")
+                .concat("&include_sanity_level=" + "false")
+                .concat("&order=" + "desc")
+                .concat("&sort=" + "date");
+        Request request = new Request.Builder()
+                .get()
+                .url(url)
+                .addHeader("UserAgent", "PixivIOSApp/5.8.3")
+                .addHeader("Referer", "http://spapi.pixiv.net/")
+                .addHeader("Authorization", "Bearer " + _token.getToken())
+                .build();
+        Response resp = _client.newCall(request).execute();
+        String reta = resp.body().string();
+        JSONObject obj = new JSONObject(reta);
+        JSONArray ret = obj.getJSONArray("response");
+        List<PixivThread> lthread = new ArrayList<>();
+        for (int i = 0; i < ret.length(); i++) {
+            JSONObject current = ret.getJSONObject(i);
+            lthread.add(new PixivThread(current.getString("title"),
+                    "",
+                    current.getString("id"),
+                    current.getJSONObject("image_urls").getString("large"),
+                    current.getInt("page_count")));
+        }
+        return lthread;
     }
 
     @Override

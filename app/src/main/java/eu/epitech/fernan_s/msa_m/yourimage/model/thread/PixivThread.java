@@ -44,6 +44,14 @@ public class PixivThread implements IThread {
         }
         callback.onGetImageFinished(images);
     }
+    //Only for Instrumented test Synchronous
+    public List<IImage> sync_getImages() {
+        List<IImage> images = new ArrayList<>();
+        for (int i = 0; i < _page_nbr; i++) {
+            images.add(new PixivImage(_pic.replace("p0", "p" + i), _title, _desc));
+        }
+        return images;
+    }
 
     @Override
     public void getAuthor(IUser.GetUserCallback callback) {

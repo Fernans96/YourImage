@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
-    private MenuItem _clearbtn;
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -76,6 +75,7 @@ public class MainActivity extends AppCompatActivity
             UpdateAdapter();
         }
     };
+    private MenuItem _clearbtn;
     private FloatingActionButton fab;
 
     private void initVariable() {
@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity
                 UpdateAdapter();
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
@@ -329,16 +330,17 @@ public class MainActivity extends AppCompatActivity
         ApisTools.MultipleGetThread(_lapi, 0, _query, new IThread.GetThreadCallback() {
             @Override
             public void onGetThreadComplete(final List<IThread> lThread) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!current_str.equals(_query))
-                            return;
-                        int old = treads.size();
-                        treads.addAll(lThread);
-                        cardAdapter.notifyItemRangeInserted(old, lThread.size());
-                    }
-                });
+                if (lThread.size() > 0 && ApisTools.ApiLoad(_lapi, lThread.get(0).getType()))
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!current_str.equals(_query))
+                                return;
+                            int old = treads.size();
+                            treads.addAll(lThread);
+                            cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                        }
+                    });
             }
         });
     }

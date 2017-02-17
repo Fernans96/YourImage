@@ -37,4 +37,13 @@ public class ApisTools {
         }
         return null;
     }
+
+    public static boolean ApiLoad(List<IApi> lapi, String type) {
+        for (IApi api : lapi) {
+            if (api.getName().equals(type)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
