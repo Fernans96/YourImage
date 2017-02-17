@@ -1,6 +1,5 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.image;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
 
@@ -24,7 +23,7 @@ public class PixivImage implements IImage {
     public GlideUrl getLink() {
         return new GlideUrl(_link,
                 new LazyHeaders.Builder()
-                        .addHeader("Referer","http://www.pixiv.net/")
+                        .addHeader("Referer", "http://www.pixiv.net/")
                         .build());
     }
 

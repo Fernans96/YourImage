@@ -1,14 +1,13 @@
 package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -20,9 +19,6 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +28,9 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
-import eu.epitech.fernan_s.msa_m.yourimage.model.user.ImgurUser;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
 
-public class PostActivity extends AppCompatActivity implements View.OnClickListener{
+public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Bitmap post_pic = null;
     private String type_image;
@@ -43,7 +39,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private String selected_name = null;
     private String title, desc;
     private int selected_pos = -1;
-//    private List<Bitmap> imgs;
+    //    private List<Bitmap> imgs;
     private List<IApi> lapi = new ArrayList<>();
 
     @Override
@@ -59,13 +55,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (selected_name != null && !selected_name.equals("none") && post_pic != null){
+                if (selected_name != null && !selected_name.equals("none") && post_pic != null) {
                     List<Bitmap> imgs = new ArrayList<Bitmap>();
                     imgs.add(post_pic);
                     lapi.get(selected_pos).SendPic(title, desc, imgs);
                     Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Toast.makeText(context, R.string.cantUp, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -123,7 +118,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);//
                 int SELECT_IMAGE = 1234;
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"),SELECT_IMAGE);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE);
             }
         });
 
@@ -158,13 +153,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
                         ImageView image_Pic = (ImageView) findViewById(R.id.preview_image);
                         image_Pic.setVisibility(View.VISIBLE);
-                        Glide
-                                .with(this)
-                                .load(data.getData())
-                                .placeholder(R.drawable.interrogation_karai)
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
-                                .into(image_Pic);
+                        ImagesTools.LoadPictures(data.getData(), this, image_Pic);
                         post_pic = bitmap;
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -179,12 +168,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.title_post:
-                title = ((EditText)view).getText().toString();
+                title = ((EditText) view).getText().toString();
                 break;
             case R.id.desc_post:
-                desc = ((EditText)view).getText().toString();
+                desc = ((EditText) view).getText().toString();
                 break;
         }
 
