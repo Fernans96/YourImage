@@ -38,4 +38,4 @@ script:
     - android-wait-for-emulator             #Run wait for the emulator script.
     - adb devices                           #Display list of devices
     - adb shell input keyevent 82 &
-    - ./gradlew connectedAndroidTest -PdisablePreDex --stacktrace   
+    - ./gradlew build
