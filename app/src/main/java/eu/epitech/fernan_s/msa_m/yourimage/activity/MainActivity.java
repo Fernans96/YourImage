@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
+    private MenuItem _clearbtn;
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -167,14 +168,33 @@ public class MainActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                _query = query;
+                getSupportActionBar().setTitle(query);
+                if (query.isEmpty()) {
+                    getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                } else {
+                    _clearbtn.setVisible(true);
+                }
+                UpdateAdapter();
                 return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                String title = getSupportActionBar().getTitle().toString();
+                if (!title.equals(getResources().getString(R.string.app_name))) {
+                    searchView.setQuery(title, false);
+                }
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                _query = newText;
-                UpdateAdapter();
-                return false;
+            public void onSearchViewClosed() {
+
             }
         });
     }
@@ -186,11 +206,9 @@ public class MainActivity extends AppCompatActivity
             names = new ArrayList<>();
 
         switchCompatImgur.setOnCheckedChangeListener(list);
-        switchCompatImgur.setEnabled(new ImgurAPI(this).isConnected());
-        switchCompatFlickr.setEnabled(new FlickrAPI(this).isConnected());
         switchCompatFlickr.setOnCheckedChangeListener(list);
-        switchCompatPixiv.setEnabled(new PixivAPI(this).isConnected());
         switchCompatPixiv.setOnCheckedChangeListener(list);
+        RefreshApi();
 
         for (String s : names) {
             if (s.equals("Imgur")) {
@@ -239,6 +257,7 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_search);
+        _clearbtn = menu.findItem(R.id.action_removesearch);
         searchView.setMenuItem(item);
 
         return true;
@@ -261,7 +280,12 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_gotop:
                 recyclerView.scrollToPosition(0);
                 break;
-
+            case R.id.action_removesearch:
+                _query = "";
+                UpdateAdapter();
+                _clearbtn.setVisible(false);
+                getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+                break;
         }
 
         return super.onOptionsItemSelected(item);

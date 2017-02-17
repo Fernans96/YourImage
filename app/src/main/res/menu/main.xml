@@ -8,8 +8,16 @@
         android:title="@string/abc_search_hint"
         app:showAsAction="always" />
     <item
+        android:id="@+id/action_removesearch"
+        android:title=""
+        android:icon="@drawable/ic_clear_white_24dp"
+        android:visible="false"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        />
+    <item
         android:id="@+id/action_reload"
-        android:title="@string/search_hint"
+        android:title=""
         android:icon="@drawable/ic_autorenew_white_24dp"
         android:orderInCategory="100"
         app:showAsAction="always"
