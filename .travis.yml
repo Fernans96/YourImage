@@ -1,10 +1,19 @@
 language: android
 jdk: oraclejdk8
 env:
+  matrix:
+    - ANDROID_TARGET=android-19 ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-25 ANDROID_ABI=armeabi-v7a
   global:
-    - ANDROID_TARGET=android-25
-    - ANDROID_ABI=armeabi-v7a
+    - ADB_INSTALL_TIMEOUT=10 
+
+cache:
+  directories:      #Cache all dirs under .gradle folder
+    - $HOME/.gradle/daemon      #Cache daemon logs
+    - $HOME/.gradle/native      #Cache library downloaded from the gradle dependency
+    - $HOME/.gradle/wrapper     #Cache the gradle
 android:
+  update_sdk: true  #Check for the updates each time you run the build.
   components:
     - tools
     - platform-tools
@@ -13,6 +22,20 @@ android:
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-    - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
+
+    #system images for emulator
+    - sys-img-armeabi-v7a-android-19
+    - sys-img-armeabi-v7a-android-25
+before_script:
+    - chmod +x gradlew      #Grant permissions
+    - android list targets
+    - echo no | android create avd --force --name test --target $ANDROID_TARGET --abi $ANDROID_ABI    #Create AVD for given api
+    - emulator -avd test -no-skin -no-audio -no-window &    #Start emulator
+
 script:
-  - ./gradlew build
+    - echo "Travis branch is $TRAVIS_BRANCH"    #Print out which branch it is.
+    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"    #Print out pull request number.
+    - android-wait-for-emulator             #Run wait for the emulator script.
+    - adb devices                           #Display list of devices
+    - adb shell input keyevent 82 &
+    - ./gradlew connectedAndroidTest -PdisablePreDex --stacktrace   
