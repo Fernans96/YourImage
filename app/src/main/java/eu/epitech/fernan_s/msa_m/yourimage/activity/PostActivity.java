@@ -29,7 +29,9 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
+import shortbread.Shortcut;
 
+@Shortcut(id = "post", icon = R.drawable.ic_add_black_24dp, shortLabel = "Post")
 public class PostActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Bitmap post_pic = null;

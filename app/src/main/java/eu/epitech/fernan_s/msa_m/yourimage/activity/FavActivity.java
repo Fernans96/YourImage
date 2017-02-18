@@ -23,7 +23,9 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
+import shortbread.Shortcut;
 
+@Shortcut(id = "fav", icon = R.drawable.ic_favorite_black_24dp, shortLabel = "Favorite")
 public class FavActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
