@@ -45,6 +45,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
         return vh;
     }
 
+    public void ClearCache() {
+        _data1.clear();
+    }
+
     private void LoadPictures(final int position, final CardAdapter.ViewHolder holder) {
         _data.get(position).getImages(new IImage.getImageCallback() {
             @Override
@@ -55,9 +59,11 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            String uri = _data1.get(position).getLink().toStringUrl();
-                            final String extension = uri.substring(uri.lastIndexOf("."));
-                            ImagesTools.LoadPictures(extension, _data1.get(position).getLink(), _context, holder.ImageContent);
+                            if (position < _data.size()) {
+                                String uri = _data1.get(position).getLink().toStringUrl();
+                                final String extension = uri.substring(uri.lastIndexOf("."));
+                                ImagesTools.LoadPictures(extension, _data1.get(position).getLink(), _context, holder.ImageContent);
+                            }
                         }
                     });
                 }

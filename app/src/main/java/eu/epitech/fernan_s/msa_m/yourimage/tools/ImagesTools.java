@@ -12,6 +12,8 @@ import com.bumptech.glide.load.model.GlideUrl;
 
 import java.io.ByteArrayOutputStream;
 
+import eu.epitech.fernan_s.msa_m.yourimage.R;
+
 /**
  * Created by quent on 04/02/2017.
  */
@@ -38,12 +40,14 @@ public class ImagesTools {
                     .asGif()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .skipMemoryCache(true)
+                    .placeholder(R.drawable.interrogation_karai)
                     .dontAnimate()
                     .into(imageView);
         else {
             Glide
                     .with(_ctx)
                     .load(gurl)
+                    .placeholder(R.drawable.interrogation_karai)
                     .dontAnimate()
                     .into(imageView);
         }
@@ -53,6 +57,7 @@ public class ImagesTools {
         Glide
                 .with(_ctx)
                 .load(gurl)
+                .placeholder(R.drawable.interrogation_karai)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .dontAnimate()

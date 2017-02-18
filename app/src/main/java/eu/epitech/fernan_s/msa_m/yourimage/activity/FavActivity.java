@@ -76,6 +76,7 @@ public class FavActivity extends AppCompatActivity {
     private void LoadFav() {
         _lthread.clear();
         _adapter.notifyDataSetChanged();
+        _adapter.ClearCache();
         for (IApi api : _lapi) {
             api.getFavs(0, new IThread.GetThreadCallback() {
                 @Override

@@ -326,6 +326,7 @@ public class MainActivity extends AppCompatActivity
     public void UpdateAdapter() {
         treads.clear();
         cardAdapter.notifyDataSetChanged();
+        cardAdapter.ClearCache();
         final String current_str = _query;
         ApisTools.MultipleGetThread(_lapi, 0, _query, new IThread.GetThreadCallback() {
             @Override
