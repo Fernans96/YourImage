@@ -2,7 +2,9 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +35,7 @@ public class FavActivity extends AppCompatActivity {
     private List<IApi> _lapi = new ArrayList<>();
     private List<IThread> _lthread;
     private CardAdapter _adapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -57,13 +60,30 @@ public class FavActivity extends AppCompatActivity {
             }
         });
         initFav();
+        initSwipe();
         LoadFav();
+    }
+
+    private void initSwipe(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mSwipeRefreshLayout.setColorSchemeColors(getColor(R.color.colorPrimaryDark),getColor(R.color.colorPrimary),getColor(R.color.colorAccent));
+        }
+        else {
+            mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark),getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent));
+        }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+                LoadFav();
+            }
+        });
     }
 
     private void initFav() {
         Gson gson = new Gson();
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
-        Log.d("BLABLA", "initFav: " + preferences.getString("apis", ""));
         for (String api : names) {
             if (api.equals("Flickr")) {
                 _lapi.add(new FlickrAPI(this));
@@ -83,13 +103,14 @@ public class FavActivity extends AppCompatActivity {
             api.getFavs(0, new IThread.GetThreadCallback() {
                 @Override
                 public void onGetThreadComplete(final List<IThread> lThread) {
-                    Log.d("BLABLA", "onGetThreadComplete: " + lThread.size());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             int old = _lthread.size();
                             _lthread.addAll(lThread);
                             _adapter.notifyItemRangeInserted(old, lThread.size());
+                            if (mSwipeRefreshLayout.isRefreshing())
+                                mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
                 }

@@ -3,11 +3,13 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private MaterialSearchView searchView;
     private RecyclerView recyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<IThread> treads;
 
     private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
@@ -156,6 +159,23 @@ public class MainActivity extends AppCompatActivity
         init_api();
         initrecyclerView();
         initDrawer();
+        initSwipe();
+    }
+
+    private void initSwipe(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mSwipeRefreshLayout.setColorSchemeColors(getColor(R.color.colorPrimaryDark),getColor(R.color.colorPrimary),getColor(R.color.colorAccent));
+        }
+        else {
+            mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark),getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent));
+        }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UpdateAdapter();
+            }
+        });
     }
 
     @Override
@@ -340,6 +360,8 @@ public class MainActivity extends AppCompatActivity
                             int old = treads.size();
                             treads.addAll(lThread);
                             cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                            if (mSwipeRefreshLayout.isRefreshing())
+                                mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
             }
@@ -369,4 +391,5 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
 }
