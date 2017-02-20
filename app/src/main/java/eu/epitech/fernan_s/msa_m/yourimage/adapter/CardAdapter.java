@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private Context _context;
     private List<IThread> _data;
     private Map<Integer, IImage> _data1;
+    private int[] _lid = new int[8];
 
     public CardAdapter(List<IThread> treads) {
         _data = treads;
@@ -50,17 +54,23 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     private void LoadPictures(final int position, final CardAdapter.ViewHolder holder) {
+        _lid[position % 8] = position;
         _data.get(position).getImages(new IImage.getImageCallback() {
             @Override
             public void onGetImageFinished(final List<IImage> lThread) {
-                _data1.put(position, lThread.get(0));
                 if (lThread.size() > 0) {
+                    _data1.put(position, lThread.get(0));
+                    if (_lid[position % 8] != position)
+                        return;
                     Handler handler = new Handler(_context.getMainLooper());
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             if (position < _data.size()) {
-                                String uri = _data1.get(position).getLink().toStringUrl();
+                                IImage img = _data1.get(position);
+                                if (img == null)
+                                    return;
+                                String uri = img.getLink().toStringUrl();
                                 final String extension = uri.substring(uri.lastIndexOf("."));
                                 ImagesTools.LoadPictures(extension, _data1.get(position).getLink(), _context, holder.ImageContent);
                             }
@@ -75,8 +85,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, final int position) {
         holder.TextTitle.setText(_data.get(position).getTitle());
         holder.TextDesc.setText(_data.get(position).getDesc());
+        Glide.clear(holder.ImageContent);
         if (_data1.containsKey(position)) {
-            String uri = _data1.get(position).getLink().toStringUrl();
+            IImage img = _data1.get(position);
+            if (img == null)
+                return;
+            String uri = img.getLink().toStringUrl();
             final String extension = uri.substring(uri.lastIndexOf("."));
             ImagesTools.LoadPictures(extension, _data1.get(position).getLink(), _context, holder.ImageContent);
         } else {
