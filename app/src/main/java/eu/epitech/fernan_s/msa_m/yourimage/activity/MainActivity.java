@@ -3,6 +3,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity
     private MaterialSearchView searchView;
     private RecyclerView recyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private TextView favtext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<IThread> treads;
 
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
+    private Typeface font;
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -83,6 +87,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initVariable() {
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        font = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams_Bold.ttf");
         editor = preferences.edit();
         treads = new ArrayList<>();
         gson = new Gson();
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
+        favtext = (TextView) favbutton.findViewById(R.id.fav_text);
         cardAdapter = new CardAdapter(treads);
         fab = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -160,6 +166,14 @@ public class MainActivity extends AppCompatActivity
         initrecyclerView();
         initDrawer();
         initSwipe();
+        initFont();
+    }
+
+    private void initFont(){
+        switchCompatFlickr.setTypeface(font);
+        switchCompatImgur.setTypeface(font);
+        switchCompatPixiv.setTypeface(font);
+        favtext.setTypeface(font);
     }
 
     private void initSwipe(){

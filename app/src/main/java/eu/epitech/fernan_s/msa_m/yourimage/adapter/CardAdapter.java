@@ -2,6 +2,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.util.ArrayMap;
@@ -34,6 +35,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     private List<IThread> _data;
     private Map<Integer, IImage> _data1;
     private int[] _lid = new int[8];
+    private Typeface font;
 
     public CardAdapter(List<IThread> treads) {
         _data = treads;
@@ -44,6 +46,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     public CardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.content_cardview, parent, false);
+        font = Typeface.createFromAsset(parent.getContext().getAssets(), "fonts/CaviarDreams_Bold.ttf");
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -114,6 +117,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             TextDesc = (TextView) v.findViewById(R.id.image_desc_card);
             ImageContent = (ImageView) v.findViewById(R.id.image_card);
             ImageProfil = (ImageView) v.findViewById(R.id.profil_image_card);
+            TextDesc.setTypeface(font);
+            TextTitle.setTypeface(font);
 
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
