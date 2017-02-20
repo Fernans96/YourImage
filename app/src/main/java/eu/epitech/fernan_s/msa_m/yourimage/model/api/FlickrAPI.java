@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -231,26 +233,45 @@ public class FlickrAPI implements IApi {
 
     @Override
     public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
-        /* Debut du cancer
-        Thread th = new Thread(new Runnable() {
+        /*Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
                 OkHttpClient client = SHttpClient.getInstance().getClient();
                 OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+                Log.d("tag", "run: " + CONSUMER_KEY);
+                Log.d("tag", "run: " + CONSUMER_SECRET);
+                Log.d("tag", "run: " + _token.getToken());
+                Log.d("tag", "run: " + _token.getSecret());
                 consumer.setTokenWithSecret(_token.getToken(), _token.getSecret());
                 try {
                     for (Bitmap img : images) {
-                        RequestBody body = new MultipartBody.Builder()
+                        RequestBody body = new MultipartBody.Builder("-----------------------------7d44e178b0434")
+                                .addFormDataPart("photo", "android.jpg", RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
                                 .addFormDataPart("title", Title)
                                 .addFormDataPart("description", Desc)
-                                .addFormDataPart("photo", "android.jpg", RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
                                 .build();
                         Request request = new Request.Builder()
                                 .url("https://up.flickr.com/services/upload/")
                                 .post(body)
                                 .build();
                         request = (Request) consumer.sign(request).unwrap();
-                        Log.d("TAG", "run: " + request.body().contentLength());
+                        body = new MultipartBody.Builder("-----------------------------7d44e178b0434")
+                                .addFormDataPart("photo", "android.jpg", RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
+                                .addFormDataPart("title", Title)
+                                .addFormDataPart("description", Desc)
+                                .build();
+                        okio.Buffer buf = new okio.Buffer();
+                        body.writeTo(buf);
+                        Log.d("TAG", "run: " + buf.readByteString().string(Charset.forName("UTF-8")));
+                        request = new Request.Builder()
+                                .url("https://up.flickr.com/services/upload/")
+                                .post(body)
+                                .header("Authorization", request.header("Authorization"))
+                                .build();
+                        for (int i = 0; i < request.headers().size(); i++) {
+                            Log.d("HEADER NAME", "run: " + request.headers().name(i));
+                            Log.d("HEADER CONTENT", "run: " + request.headers().get(request.headers().name(i)));
+                        }
                         Response res = client.newCall(request).execute();
                         String str = res.body().string();
                         Log.d("STR", "run: " + str);
@@ -277,8 +298,7 @@ public class FlickrAPI implements IApi {
             }
         });
         th.start();
-        fin du cancer
-        */ // les commentaires soigne le cancer
+        */ //C'est le cancer
     }
 
     @Override
