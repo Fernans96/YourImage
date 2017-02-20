@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -49,6 +50,7 @@ public class ImageActivity extends AppCompatActivity {
     private IThread thread;
     private List<IImage> lImage;
     private ScreenSlidePagerAdapter mPagerAdapter;
+    private Typeface font;
     private int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 4242;
 
 
@@ -64,6 +66,7 @@ public class ImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_image);
         SugarContext.init(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.ImageToolBar);
+        font = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams_Bold.ttf");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -90,8 +93,11 @@ public class ImageActivity extends AppCompatActivity {
         _ctx = this;
         TextView textView = (TextView) findViewById(R.id.title_tread_image);
         page_tv = (TextView) findViewById(R.id.page_text);
-        if (thread.getTitle() != null)
+        if (thread.getTitle() != null){
             textView.setText(thread.getTitle());
+            textView.setTypeface(font);
+        }
+
 
         mPager = (ViewPager) findViewById(R.id.viewPager);
 
@@ -108,6 +114,7 @@ public class ImageActivity extends AppCompatActivity {
                         if (nb_page > 1) {
                             String pages = "1/" + nb_page;
                             page_tv.setText(pages);
+                            page_tv.setTypeface(font);
                         }
                         mPager.setAdapter(mPagerAdapter);
                     }

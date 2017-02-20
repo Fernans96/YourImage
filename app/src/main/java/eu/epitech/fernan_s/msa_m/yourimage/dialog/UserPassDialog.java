@@ -3,6 +3,7 @@ package eu.epitech.fernan_s.msa_m.yourimage.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -24,15 +25,19 @@ public class UserPassDialog extends AlertDialog.Builder  {
     private EditText _Password;
     private AlertDialog _Dialog;
     private IApi.ConnectCallback _callback;
+    private Typeface font;
     private boolean done = false;
 
     public UserPassDialog(Context context, IApi api, IApi.ConnectCallback callback) {
         super(context);
         _api = api;
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(context);
+        font = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams_Bold.ttf");
         _Dialog_Layout = layoutInflaterAndroid.inflate(R.layout.userpassdialog, null);
         _UserName = (EditText) _Dialog_Layout.findViewById(R.id.UserName);
         _Password = (EditText) _Dialog_Layout.findViewById(R.id.Password);
+        _UserName.setTypeface(font);
+        _Password.setTypeface(font);
         setView(_Dialog_Layout);
         InitDialog();
         _Dialog = create();
