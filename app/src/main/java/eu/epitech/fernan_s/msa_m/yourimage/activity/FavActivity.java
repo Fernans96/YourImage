@@ -106,6 +106,7 @@ public class FavActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.d("BLABLA", "run: " + lThread.size());
                             int old = _lthread.size();
                             _lthread.addAll(lThread);
                             _adapter.notifyItemRangeInserted(old, lThread.size());
