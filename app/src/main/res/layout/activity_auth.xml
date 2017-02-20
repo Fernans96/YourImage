@@ -67,4 +67,11 @@
         android:src="@drawable/ic_pixiv"
         />
 
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="start|center"
+        android:id="@+id/px500_auth"
+        android:src="@drawable/ic_500px"/>
+
 </FrameLayout>

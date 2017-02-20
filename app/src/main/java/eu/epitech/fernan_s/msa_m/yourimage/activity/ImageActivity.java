@@ -38,6 +38,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
+import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PX500Thread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.PixivThread;
 
 public class ImageActivity extends AppCompatActivity {
@@ -80,6 +81,8 @@ public class ImageActivity extends AppCompatActivity {
                 thread = new Gson().fromJson(Jthread, ImgurThread.class);
             } else if (type.equals("Pixiv")) {
                 thread = new Gson().fromJson(Jthread, PixivThread.class);
+            } else if (type.equals("500px")) {
+                thread = new Gson().fromJson(Jthread, PX500Thread.class);
             }
         } catch (JSONException e) {
             e.printStackTrace();

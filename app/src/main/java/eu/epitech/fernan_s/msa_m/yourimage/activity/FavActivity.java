@@ -21,6 +21,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.listener.HidingScrollListener;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.PX500API;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import shortbread.Shortcut;
@@ -71,6 +72,8 @@ public class FavActivity extends AppCompatActivity {
                 _lapi.add(new PixivAPI(this));
             } else if (api.equals("Imgur")) {
                 _lapi.add(new ImgurAPI(this));
+            } else if (api.equals("500px")) {
+                _lapi.add(new PX500API(this));
             }
         }
     }

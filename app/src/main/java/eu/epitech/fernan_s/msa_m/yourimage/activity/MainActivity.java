@@ -34,6 +34,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollLis
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.PX500API;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.tools.ApisTools;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity
     private EndlessRecyclerViewScrollListener scrollListener;
     private List<IThread> treads;
 
-    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
+    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv, switchCompat500px;
     private LinearLayout favbutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
@@ -210,6 +211,8 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setOnCheckedChangeListener(list);
         switchCompatFlickr.setOnCheckedChangeListener(list);
         switchCompatPixiv.setOnCheckedChangeListener(list);
+        switchCompat500px.setOnCheckedChangeListener(list);
+
         RefreshApi();
 
         for (String s : names) {
@@ -219,6 +222,8 @@ public class MainActivity extends AppCompatActivity
                 switchCompatFlickr.setChecked(true);
             } else if (s.equals("Pixiv")) {
                 switchCompatPixiv.setChecked(true);
+            } else if (s.equals("500px")) {
+                switchCompat500px.setChecked(true);
             }
         }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
@@ -234,6 +239,9 @@ public class MainActivity extends AppCompatActivity
         connected = new PixivAPI(this).isConnected();
         switchCompatPixiv.setEnabled(connected);
         switchCompatPixiv.setChecked(switchCompatPixiv.isChecked() && connected);
+        connected = new PX500API(this).isConnected();
+        switchCompat500px.setEnabled(connected);
+        switchCompat500px.setChecked(switchCompat500px.isChecked() && connected);
     }
 
     @Override
