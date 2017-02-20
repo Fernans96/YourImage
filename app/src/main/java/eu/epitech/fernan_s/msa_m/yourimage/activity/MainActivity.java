@@ -317,7 +317,10 @@ public class MainActivity extends AppCompatActivity
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
         if (names == null)
             names = new ArrayList<>();
-        names.add(api_name);
+        names.clear();
+        for (IApi a : _lapi) {
+            names.add(a.getName());
+        }
         String s = gson.toJson(names);
         editor.putString("apis", s);
         editor.apply();
