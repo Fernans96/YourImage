@@ -56,7 +56,7 @@
         android:layout_height="100dp"
         android:layout_gravity="center|top"
         android:id="@+id/flickr_auth"
-        android:src="@drawable/ic_flickr"
+        android:src="@drawable/social_flickr_box"
         />
 
     <ImageView
