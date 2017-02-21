@@ -263,8 +263,38 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void getUserThread(int page, IThread.GetThreadCallback callback) {
+    public void getUserThread(int page, final IThread.GetThreadCallback callback) {
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _token.getUserName() + "/albums/" + page +".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    JSONObject obj = new JSONObject(response.body().string());
+                    JSONArray arr = obj.getJSONArray("data");
+                    List<IThread> lThread = new ArrayList<>();
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject ji = arr.getJSONObject(i);
+                        lThread.add(new ImgurThread(
+                                ji.getString("title"),
+                                ji.getString("id"),
+                                ji.getString("topic"),
+                                ji.getString("account_url"),
+                                ji.getLong("account_id"),
+                                _api
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    return;
+                }
+            }
+        });
     }
 
     @Override

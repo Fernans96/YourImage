@@ -318,8 +318,40 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void getUserThread(int page, IThread.GetThreadCallback callback) {
-        
+    public void getUserThread(int page, final IThread.GetThreadCallback callback) {
+        String url = "https://api.flickr.com/services/rest/?";
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = null;
+        request = new Request.Builder().url(url + "method=flickr.people.getPhotos&per_page=45&api_key=" + CONSUMER_KEY + "&format=json&user_id=me&page=" + page).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                List<IThread> lThread = new ArrayList<>();
+                String str = response.body().string();
+                str = str.substring(14, str.length() - 1);
+                try {
+                    JSONObject jo = new JSONObject(str);
+                    JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
+                    for (int i = 0; i < photos.length(); i++) {
+                        JSONObject joo = photos.getJSONObject(i);
+                        lThread.add(new FlickrThread(
+                                joo.getString("owner"),
+                                joo.getString("id"),
+                                joo.getString("title")
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    return;
+                }
+
+            }
+        });
     }
 
     @Override
