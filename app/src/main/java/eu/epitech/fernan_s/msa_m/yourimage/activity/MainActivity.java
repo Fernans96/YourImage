@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
 
     private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
     private LinearLayout favbutton;
+    private LinearLayout mybutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
     private View hView;
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
+        mybutton = (LinearLayout) hView.findViewById(R.id.my_button);
         favtext = (TextView) favbutton.findViewById(R.id.fav_text);
         cardAdapter = new CardAdapter(treads);
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -112,6 +114,7 @@ public class MainActivity extends AppCompatActivity
     private void initBtn() {
         fab.setOnClickListener(new BtnActivity(PostActivity.class, _ctx));
         favbutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
+        mybutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
     }
 
     private void initrecyclerView() {

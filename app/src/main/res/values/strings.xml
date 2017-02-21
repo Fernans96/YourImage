@@ -32,4 +32,6 @@
     <string name="disconnect">Disconnect</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+
+    <string name="my">My Pictures</string>
 </resources>

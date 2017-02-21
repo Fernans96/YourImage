@@ -3,16 +3,14 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.orm.SugarContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +23,8 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
-import shortbread.Shortcut;
 
-@Shortcut(id = "fav", icon = R.drawable.ic_favorite_black_24dp, shortLabel = "Favorite")
-public class FavActivity extends AppCompatActivity {
-
+public class MyPicturesActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private RecyclerView recyclerView;
     private List<IApi> _lapi = new ArrayList<>();
@@ -41,8 +36,8 @@ public class FavActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fav);
-        SugarContext.init(this);
+        setContentView(R.layout.activity_my_pictures);
+
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_fav);
         _lthread = new ArrayList<>();
@@ -84,7 +79,6 @@ public class FavActivity extends AppCompatActivity {
     private void initFav() {
         Gson gson = new Gson();
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
-        Log.d("TEST", preferences.getString("apis", ""));
         for (String api : names) {
             if (api.equals("Flickr")) {
                 _lapi.add(new FlickrAPI(this));

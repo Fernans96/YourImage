@@ -32,4 +32,6 @@
     <string name="confirDis">Êtes-vous sûr de vouloir vous déconnecter</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+
+    <string name="my">Mes Photos</string>
 </resources>
