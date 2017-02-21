@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
             IApi api = ApisTools.CreateInstance(compoundButton.getId(), _ctx);
             if (b) {
                 _lapi.add(api);
-                setApis(api.getName());
+                setApis();
             } else {
                 RemoveApi(api.getName());
             }
@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
+        setApis();
     }
 
     public void RefreshApi() {
@@ -327,7 +328,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void setApis(String api_name) {
+    private void setApis() {
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
         if (names == null)
             names = new ArrayList<>();
