@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     private void initBtn() {
         fab.setOnClickListener(new BtnActivity(PostActivity.class, _ctx));
         favbutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
-        mybutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
+        mybutton.setOnClickListener(new BtnActivity(MyPicturesActivity.class, _ctx));
     }
 
     private void initrecyclerView() {

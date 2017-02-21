@@ -39,7 +39,7 @@ public class MyPicturesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_pictures);
 
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_fav);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_my);
         _lthread = new ArrayList<>();
         _adapter = new CardAdapter(_lthread);
         recyclerView.setAdapter(_adapter);
@@ -95,7 +95,7 @@ public class MyPicturesActivity extends AppCompatActivity {
         _adapter.notifyDataSetChanged();
         _adapter.ClearCache();
         for (IApi api : _lapi) {
-            api.getFavs(0, new IThread.GetThreadCallback() {
+            api.getUserThread(0, new IThread.GetThreadCallback() {
                 @Override
                 public void onGetThreadComplete(final List<IThread> lThread) {
                     runOnUiThread(new Runnable() {
