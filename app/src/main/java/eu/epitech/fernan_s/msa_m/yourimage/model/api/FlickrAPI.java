@@ -318,6 +318,11 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
+    public void getUserThread(int page, IThread.GetThreadCallback callback) {
+        
+    }
+
+    @Override
     public String getName() {
         return ("Flickr");
     }

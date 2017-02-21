@@ -24,6 +24,7 @@ public interface IApi {
     public void SendPic(String Title, String Desc, List<Bitmap> images);
     public Bitmap getIcon();
     public void getFavs(int page, IThread.GetThreadCallback callback);
+    public void getUserThread(int page, IThread.GetThreadCallback callback);
     public String getName();
     public boolean CanUpload();
     public interface AuthLinkCallback {
