@@ -13,6 +13,7 @@ public class FlickrToken implements IToken {
     private String _access_token;
     private String _secret_token;
     private String _account_username;
+    private String _id;
 
     private FlickrToken() {
 
@@ -22,6 +23,7 @@ public class FlickrToken implements IToken {
         _access_token = result.get("oauth_token");
         _secret_token = result.get("oauth_token_secret");
         _account_username = result.get("username");
+        _id = result.get("user_nsid");
     }
 
     public static FlickrToken Parse(JSONObject obj) {
@@ -31,6 +33,7 @@ public class FlickrToken implements IToken {
             ret._access_token = obj.getString("oauth_token");
             ret._secret_token = obj.getString("oauth_token_secret");
             ret._account_username = obj.getString("username");
+            ret._id = obj.getString("_id");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -58,6 +61,10 @@ public class FlickrToken implements IToken {
         return _secret_token;
     }
 
+    public String get_id() {
+        return _id;
+    }
+
     @Override
     public JSONObject ToJson() {
         JSONObject ret = new JSONObject();
@@ -65,6 +72,7 @@ public class FlickrToken implements IToken {
             ret.put("oauth_token", _access_token);
             ret.put("username", _account_username);
             ret.put("oauth_token_secret", _secret_token);
+            ret.put("_id", _id);
         } catch (JSONException e) {
             e.printStackTrace();
         }

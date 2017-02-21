@@ -55,16 +55,9 @@ public class ImageActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        SugarContext.terminate();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
-        SugarContext.init(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.ImageToolBar);
         font = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams_Bold.ttf");
         setSupportActionBar(toolbar);
