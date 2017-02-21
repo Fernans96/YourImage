@@ -49,13 +49,12 @@ public class MainActivity extends AppCompatActivity
     private MaterialSearchView searchView;
     private RecyclerView recyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
-    private TextView favtext;
+    private TextView favtext, mytext;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<IThread> treads;
 
     private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
-    private LinearLayout favbutton;
-    private LinearLayout mybutton;
+    private LinearLayout favbutton, mybutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
     private View hView;
@@ -107,6 +106,7 @@ public class MainActivity extends AppCompatActivity
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
         mybutton = (LinearLayout) hView.findViewById(R.id.my_button);
         favtext = (TextView) favbutton.findViewById(R.id.fav_text);
+        mytext = (TextView) mybutton.findViewById(R.id.my_text);
         cardAdapter = new CardAdapter(treads);
         fab = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setTypeface(font);
         switchCompatPixiv.setTypeface(font);
         favtext.setTypeface(font);
+        mytext.setTypeface(font);
     }
 
     private void initSwipe(){

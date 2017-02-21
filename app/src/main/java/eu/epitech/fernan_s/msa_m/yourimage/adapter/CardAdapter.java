@@ -108,7 +108,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView TextTitle, TextDesc;
-        private ImageView ImageContent, ImageProfil;
+        private ImageView ImageContent;
 
         public ViewHolder(View v) {
             super(v);
@@ -116,7 +116,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             TextTitle = (TextView) v.findViewById(R.id.image_title_card);
             TextDesc = (TextView) v.findViewById(R.id.image_desc_card);
             ImageContent = (ImageView) v.findViewById(R.id.image_card);
-            ImageProfil = (ImageView) v.findViewById(R.id.profil_image_card);
             TextDesc.setTypeface(font);
             TextTitle.setTypeface(font);
 
