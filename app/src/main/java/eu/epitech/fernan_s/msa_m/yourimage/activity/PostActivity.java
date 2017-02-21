@@ -67,6 +67,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                         desc = desc_post.getText().toString();
                     imgs.add(post_pic);
                     lapi.get(selected_pos).SendPic(title, desc, imgs);
+                    Toast.makeText(context, R.string.uploading, Toast.LENGTH_SHORT).show();
                     //Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.cantUp, Toast.LENGTH_SHORT).show();

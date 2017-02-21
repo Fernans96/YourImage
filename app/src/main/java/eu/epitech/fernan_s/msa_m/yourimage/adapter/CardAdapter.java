@@ -87,7 +87,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, final int position) {
         holder.TextTitle.setText(_data.get(position).getTitle());
-        holder.TextDesc.setText(_data.get(position).getDesc());
+        if (!_data.get(position).getDesc().isEmpty() && !_data.get(position).getDesc().equals("null")) {
+            Log.d("AEERE", "text: " + _data.get(position).getDesc());
+            holder.TextDesc.setText(_data.get(position).getDesc());
+        }
+        else
+            holder.TextDesc.setText("");
         Glide.clear(holder.ImageContent);
         if (_data1.containsKey(position)) {
             IImage img = _data1.get(position);

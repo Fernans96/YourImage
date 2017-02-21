@@ -34,4 +34,7 @@
     <string name="no">Non</string>
 
     <string name="my">Mes Photos</string>
+
+    <string name="uploading">Téléchargement&#8230;</string>
+    <string name="uploaded">Téléchargé!</string>
 </resources>
