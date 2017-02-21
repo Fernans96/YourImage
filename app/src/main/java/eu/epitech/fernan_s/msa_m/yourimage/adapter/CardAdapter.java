@@ -54,7 +54,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     }
 
     public void ClearCache() {
-        _data1.clear();
+        if (!_data1.isEmpty())
+            _data1.clear();
     }
 
     private void LoadPictures(final int position, final CardAdapter.ViewHolder holder) {

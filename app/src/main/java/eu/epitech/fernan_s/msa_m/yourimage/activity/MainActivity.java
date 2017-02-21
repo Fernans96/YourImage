@@ -35,6 +35,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.callback.BtnActivity;
 import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollListener;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<IThread> treads;
 
-    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv;
+    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv, switchCompatDeviant;
     private LinearLayout favbutton, mybutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
         switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
+        switchCompatDeviant = (SwitchCompat) hView.findViewById(R.id.DeviantSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
         mybutton = (LinearLayout) hView.findViewById(R.id.my_button);
@@ -176,6 +178,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatFlickr.setTypeface(font);
         switchCompatImgur.setTypeface(font);
         switchCompatPixiv.setTypeface(font);
+        switchCompatDeviant.setTypeface(font);
         favtext.setTypeface(font);
         mytext.setTypeface(font);
     }
@@ -248,6 +251,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setOnCheckedChangeListener(list);
         switchCompatFlickr.setOnCheckedChangeListener(list);
         switchCompatPixiv.setOnCheckedChangeListener(list);
+        switchCompatDeviant.setOnCheckedChangeListener(list);
         RefreshApi();
 
         for (String s : names) {
@@ -257,6 +261,8 @@ public class MainActivity extends AppCompatActivity
                 switchCompatFlickr.setChecked(true);
             } else if (s.equals("Pixiv")) {
                 switchCompatPixiv.setChecked(true);
+            } else if (s.equals("Deviant")) {
+                switchCompatDeviant.setChecked(true);
             }
         }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
@@ -273,6 +279,9 @@ public class MainActivity extends AppCompatActivity
         connected = new PixivAPI(this).isConnected();
         switchCompatPixiv.setEnabled(connected);
         switchCompatPixiv.setChecked(switchCompatPixiv.isChecked() && connected);
+        connected = new DeviantArtApi(this).isConnected();
+        switchCompatDeviant.setEnabled(connected);
+        switchCompatDeviant.setChecked(switchCompatDeviant.isChecked() && connected);
     }
 
     @Override

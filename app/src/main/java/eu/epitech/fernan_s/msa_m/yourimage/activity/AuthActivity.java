@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -31,6 +32,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         lapi.add(new FlickrAPI(this));
         lapi.add(new ImgurAPI(this));
         lapi.add(new PixivAPI(this));
+        lapi.add(new DeviantArtApi(this));
         setContentView(R.layout.activity_auth);
 
 
@@ -54,6 +56,12 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         imageView = (ImageView) findViewById(R.id.pixiv_auth);
         imageView.setTag(lapi.get(2).isConnected());
         if (!lapi.get(2).isConnected())
+            imageView.setColorFilter(filter);
+        imageView.setOnClickListener(this);
+
+        imageView = (ImageView) findViewById(R.id.deviant_auth);
+        imageView.setTag(lapi.get(3).isConnected());
+        if (!lapi.get(3).isConnected())
             imageView.setColorFilter(filter);
         imageView.setOnClickListener(this);
     }
@@ -115,6 +123,10 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.pixiv_auth:
                 CheckApi((ImageView)view, !(boolean)view.getTag(), 2);
+                break;
+
+            case R.id.deviant_auth:
+                CheckApi((ImageView)view, !(boolean)view.getTag(), 3);
                 break;
         }
     }

@@ -79,10 +79,59 @@ public class RequestTool {
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             String inputStreamString = new Scanner(in,"UTF-8").useDelimiter("\\A").next();
             System.out.println(inputStreamString);
+            return inputStreamString;
         }
         finally {
             urlConnection.disconnect();
         }
-        return null;
+    }
+    public static String POSTRequest(String endpointUrl, HttpParameters urlParameters, byte[] data) throws Exception {
+        URL url = new URL(endpointUrl);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestProperty("Accept", "application/json");
+        urlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + "---------------------------7d44e178b0434");
+        urlConnection.setRequestMethod("POST");
+        urlConnection.setDoOutput(true);
+
+        //Send the payload to the connection
+        OutputStream OutputStream = urlConnection.getOutputStream();
+        try {
+            //Send the POST variables
+            Iterator<String> iterator = urlParameters.keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                String str = "--"+"---------------------------7d44e178b0434" + "\r\n";
+                str += "Content-Disposition: form-data; name=\""+ key + "\"" + "\r\n" + "\r\n";
+                str += urlParameters.getFirst(key) + "\r\n";
+                OutputStream.write(str.getBytes());
+                OutputStream.flush();
+            }
+
+            //Send the file
+            String str = "--" + "---------------------------7d44e178b0434" + "\r\n";
+            str += "Content-Disposition: form-data; name=\"file\"; filename=\""+"android.jpg"+"\"" + "\r\n";
+            str += "Content-Type: " + "image/jpeg" + "\r\n\r\n";
+            OutputStream.write(str.getBytes());
+            OutputStream.write(data);
+            str = "\r\n--" + "---------------------------7d44e178b0434" + "\r\n";
+            OutputStream.write(str.getBytes());
+        }
+        finally {
+            if (OutputStream != null) {
+                OutputStream.close();
+            }
+        }
+
+        //Send the request and read the output
+        try {
+            System.out.println("Response: " + urlConnection.getResponseCode() + " " + urlConnection.getResponseMessage());
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            String inputStreamString = new Scanner(in,"UTF-8").useDelimiter("\\A").next();
+            System.out.println(inputStreamString);
+            return inputStreamString;
+        }
+        finally {
+            urlConnection.disconnect();
+        }
     }
 }

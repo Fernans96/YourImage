@@ -36,6 +36,7 @@ import java.util.List;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.ScreenSlidePagerAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
+import eu.epitech.fernan_s.msa_m.yourimage.model.thread.DeviantArtThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.FlickrThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.ImgurThread;
@@ -76,6 +77,8 @@ public class ImageActivity extends AppCompatActivity {
                 thread = new Gson().fromJson(Jthread, ImgurThread.class);
             } else if (type.equals("Pixiv")) {
                 thread = new Gson().fromJson(Jthread, PixivThread.class);
+            } else if (type.equals("Deviant")) {
+                thread = new Gson().fromJson(Jthread, DeviantArtThread.class);
             }
         } catch (JSONException e) {
             e.printStackTrace();

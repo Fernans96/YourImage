@@ -18,6 +18,7 @@ import java.util.List;
 import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.listener.HidingScrollListener;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -86,6 +87,8 @@ public class MyPicturesActivity extends AppCompatActivity {
                 _lapi.add(new PixivAPI(this));
             } else if (api.equals("Imgur")) {
                 _lapi.add(new ImgurAPI(this));
+            } else if (api.equals("Deviant")) {
+                _lapi.add(new DeviantArtApi(this));
             }
         }
     }

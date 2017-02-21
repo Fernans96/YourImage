@@ -74,12 +74,8 @@ public class ImgurAPI implements IApi {
 
     @Override
     public void connect(Context ctx, ConnectCallback callback) {
-        if (_token == null) {
-            AuthDialog diag = new AuthDialog(ctx, this, callback);
-            diag.show();
-        } else {
-            Toast.makeText(_ctx, "Already auth", Toast.LENGTH_LONG).show();
-        }
+        AuthDialog diag = new AuthDialog(ctx, this, callback);
+        diag.show();
     }
 
     @Override
@@ -110,7 +106,7 @@ public class ImgurAPI implements IApi {
     @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/time/"+ page +".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/time/" + page + ".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -254,7 +250,7 @@ public class ImgurAPI implements IApi {
     @Override
     public void getUserThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _token.getUserName() + "/albums/" + page +".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _token.getUserName() + "/albums/" + page + ".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
         Log.d("BLA", "getUserThread: " + _token.getUserName() + "\n" + _token.getToken());
         client.newCall(request).enqueue(new Callback() {
             @Override

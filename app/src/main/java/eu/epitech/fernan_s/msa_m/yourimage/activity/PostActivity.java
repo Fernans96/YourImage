@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -113,6 +114,10 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             lapi.add(api);
         }
         api = new PixivAPI(this);
+        if (api.CanUpload() && api.isConnected()) {
+            lapi.add(api);
+        }
+        api = new DeviantArtApi(this);
         if (api.CanUpload() && api.isConnected()) {
             lapi.add(api);
         }
