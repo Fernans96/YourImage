@@ -42,7 +42,6 @@ public class FavActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav);
-        SugarContext.init(this);
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_fav);
         _lthread = new ArrayList<>();
