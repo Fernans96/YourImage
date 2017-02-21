@@ -43,6 +43,7 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
     private int selected_pos = -1;
     //    private List<Bitmap> imgs;
     private List<IApi> lapi = new ArrayList<>();
+    private EditText title_post, desc_post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,8 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
 
         FrameLayout Pics_btn = (FrameLayout) findViewById(R.id.pics_selector);
         Button button = (Button) findViewById(R.id.upload_button);
-        EditText editText = (EditText) findViewById(R.id.title_post);
+        title_post = (EditText) findViewById(R.id.title_post);
+        desc_post = (EditText) findViewById(R.id.desc_post);
         title = getString(R.string.title);
         desc = getString(R.string.desc);
         button.setOnClickListener(new View.OnClickListener() {
@@ -59,9 +61,13 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 if (selected_name != null && !selected_name.equals("none") && post_pic != null) {
                     List<Bitmap> imgs = new ArrayList<Bitmap>();
+                    if (title_post.getText().toString().trim().length() > 0)
+                        title = title_post.getText().toString();
+                    if (desc_post.getText().toString().trim().length() > 0)
+                        desc = desc_post.getText().toString();
                     imgs.add(post_pic);
                     lapi.get(selected_pos).SendPic(title, desc, imgs);
-                    Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context, R.string.cantUp, Toast.LENGTH_SHORT).show();
                 }
