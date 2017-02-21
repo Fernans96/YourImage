@@ -242,7 +242,7 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images, final SendPictureCallback callback) {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -253,8 +253,10 @@ public class FlickrAPI implements IApi {
                 dealabsConsumer.setTokenWithSecret(_token.getToken(), _token.getSecret());
                 try {
                     Log.d("RES", "run: " + RequestTool.POSTRequest("https://up.flickr.com/services/upload/", params, dealabsConsumer, ImagesTools.toByteArray(images.get(0))));
+                    callback.onSuccess();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    callback.onFailed();
                 }
             }
         });

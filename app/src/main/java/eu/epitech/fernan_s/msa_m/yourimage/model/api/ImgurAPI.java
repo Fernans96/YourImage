@@ -183,7 +183,7 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images, final SendPictureCallback callback) {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -221,24 +221,13 @@ public class ImgurAPI implements IApi {
                                 .build();
                         Response res = client.newCall(request).execute();
                         if (!res.isSuccessful()) {
-                            Handler handler = new Handler(_ctx.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(_ctx, "Upload Failed up", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            callback.onFailed();
                             return;
                         }
                     }
-                    Handler handler = new Handler(_ctx.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    callback.onSuccess();
                 } catch (IOException | JSONException ignored) {
+                    callback.onFailed();
                 }
             }
         });

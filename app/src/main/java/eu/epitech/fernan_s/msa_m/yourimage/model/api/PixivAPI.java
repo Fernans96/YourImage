@@ -306,7 +306,7 @@ public class PixivAPI implements IApi {
     }
 
     @Override
-    public void SendPic(String Title, String Desc, List<Bitmap> images) {
+    public void SendPic(String Title, String Desc, List<Bitmap> images, SendPictureCallback callback) {
 
     }
 
