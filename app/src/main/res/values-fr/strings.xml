@@ -37,4 +37,5 @@
 
     <string name="uploading">Téléchargement&#8230;</string>
     <string name="uploaded">Téléchargé!</string>
+    <string name="upload_failed">Echec de téléchargement</string>
 </resources>

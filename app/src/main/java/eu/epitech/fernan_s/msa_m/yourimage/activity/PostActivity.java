@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -51,11 +52,12 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_post);
 
         FrameLayout Pics_btn = (FrameLayout) findViewById(R.id.pics_selector);
-        Button button = (Button) findViewById(R.id.upload_button);
+        final Button button = (Button) findViewById(R.id.upload_button);
         title_post = (EditText) findViewById(R.id.title_post);
         desc_post = (EditText) findViewById(R.id.desc_post);
         title = getString(R.string.title);
         desc = getString(R.string.desc);
+        final Handler mainHandler = new Handler(context.getMainLooper());
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,7 +68,30 @@ public class PostActivity extends AppCompatActivity implements View.OnClickListe
                     if (desc_post.getText().toString().trim().length() > 0)
                         desc = desc_post.getText().toString();
                     imgs.add(post_pic);
-                    lapi.get(selected_pos).SendPic(title, desc, imgs);
+                    button.setClickable(false);
+                    lapi.get(selected_pos).SendPic(title, desc, imgs, new IApi.SendPictureCallback() {
+                        @Override
+                        public void onSuccess() {
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, R.string.uploaded, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailed() {
+                            button.setClickable(true);
+                            mainHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(context, R.string.upload_failed, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
                     Toast.makeText(context, R.string.uploading, Toast.LENGTH_SHORT).show();
                     //Toast.makeText(context, "faut que ça up sur: " + selected_name, Toast.LENGTH_SHORT).show();
                 } else {

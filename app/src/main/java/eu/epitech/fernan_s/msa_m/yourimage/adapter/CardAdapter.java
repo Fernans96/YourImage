@@ -24,6 +24,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.activity.ImageActivity;
 import eu.epitech.fernan_s.msa_m.yourimage.model.image.IImage;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.GlideCircleTransform;
 import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
 
 /**
@@ -87,12 +88,30 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, final int position) {
         holder.TextTitle.setText(_data.get(position).getTitle());
-        if (!_data.get(position).getDesc().isEmpty() && !_data.get(position).getDesc().equals("null")) {
-            Log.d("AEERE", "text: " + _data.get(position).getDesc());
+        if (!_data.get(position).getDesc().equals("null"))
             holder.TextDesc.setText(_data.get(position).getDesc());
-        }
         else
             holder.TextDesc.setText("");
+
+        if (_data.get(position).getType().equals("Imgur"))
+            Glide
+                    .with(_context)
+                    .load(R.drawable.ic_imgur)
+                    .transform(new GlideCircleTransform(_context))
+                    .into(holder.ImageType);
+        else if (_data.get(position).getType().equals("Flickr"))
+            Glide
+                    .with(_context)
+                    .load(R.drawable.social_flickr_box)
+                    .transform(new GlideCircleTransform(_context))
+                    .into(holder.ImageType);
+        else if (_data.get(position).getType().equals("Pixiv"))
+            Glide
+                    .with(_context)
+                    .load(R.drawable.ic_pixiv)
+                    .transform(new GlideCircleTransform(_context))
+                    .into(holder.ImageType);
+
         Glide.clear(holder.ImageContent);
         if (_data1.containsKey(position)) {
             IImage img = _data1.get(position);
@@ -113,7 +132,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView TextTitle, TextDesc;
-        private ImageView ImageContent;
+        private ImageView ImageContent, ImageType;
 
         public ViewHolder(View v) {
             super(v);
@@ -121,6 +140,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             TextTitle = (TextView) v.findViewById(R.id.image_title_card);
             TextDesc = (TextView) v.findViewById(R.id.image_desc_card);
             ImageContent = (ImageView) v.findViewById(R.id.image_card);
+            ImageType = (ImageView) v.findViewById(R.id.from_image);
             TextDesc.setTypeface(font);
             TextTitle.setTypeface(font);
 

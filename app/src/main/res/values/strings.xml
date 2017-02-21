@@ -37,4 +37,5 @@
 
     <string name="uploading">Uploading&#8230;</string>
     <string name="uploaded">Uploaded!</string>
+    <string name="upload_failed">Upload failed!</string>
 </resources>
