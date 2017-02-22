@@ -74,12 +74,8 @@ public class ImgurAPI implements IApi {
 
     @Override
     public void connect(Context ctx, ConnectCallback callback) {
-        if (_token == null) {
-            AuthDialog diag = new AuthDialog(ctx, this, callback);
-            diag.show();
-        } else {
-            Toast.makeText(_ctx, "Already auth", Toast.LENGTH_LONG).show();
-        }
+        AuthDialog diag = new AuthDialog(ctx, this, callback);
+        diag.show();
     }
 
     @Override
@@ -110,7 +106,7 @@ public class ImgurAPI implements IApi {
     @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/time/"+ page +".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/time/" + page + ".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -128,7 +124,7 @@ public class ImgurAPI implements IApi {
                         lThread.add(new ImgurThread(
                                 ji.getString("title"),
                                 ji.getString("id"),
-                                ji.getString("topic"),
+                                ji.getString("description"),
                                 ji.getString("account_url"),
                                 ji.getLong("account_id"),
                                 _api
@@ -168,7 +164,7 @@ public class ImgurAPI implements IApi {
                         lThread.add(new ImgurThread(
                                 ji.getString("title"),
                                 ji.getString("id"),
-                                ji.getString("topic"),
+                                ji.getString("description"),
                                 ji.getString("account_url"),
                                 ji.getLong("account_id"),
                                 _api
@@ -183,7 +179,7 @@ public class ImgurAPI implements IApi {
     }
 
     @Override
-    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images, final SendPictureCallback callback) {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -221,24 +217,13 @@ public class ImgurAPI implements IApi {
                                 .build();
                         Response res = client.newCall(request).execute();
                         if (!res.isSuccessful()) {
-                            Handler handler = new Handler(_ctx.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(_ctx, "Upload Failed up", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            callback.onFailed();
                             return;
                         }
                     }
-                    Handler handler = new Handler(_ctx.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    callback.onSuccess();
                 } catch (IOException | JSONException ignored) {
+                    callback.onFailed();
                 }
             }
         });
@@ -260,6 +245,44 @@ public class ImgurAPI implements IApi {
             favs.add(th.UpdateToken(_token));
         }
         callback.onGetThreadComplete(favs);
+    }
+
+    @Override
+    public void getUserThread(int page, final IThread.GetThreadCallback callback) {
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _token.getUserName() + "/albums/" + page + ".json").addHeader("Authorization", "Bearer " + _token.getToken()).build();
+        Log.d("BLA", "getUserThread: " + _token.getUserName() + "\n" + _token.getToken());
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String str = response.body().string();
+                    Log.d("BLA", "onResponse: " + str);
+                    JSONObject obj = new JSONObject(str);
+                    JSONArray arr = obj.getJSONArray("data");
+                    List<IThread> lThread = new ArrayList<>();
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject ji = arr.getJSONObject(i);
+                        lThread.add(new ImgurThread(
+                                ji.getString("title"),
+                                ji.getString("id"),
+                                ji.getString("description"),
+                                ji.getString("account_url"),
+                                ji.getLong("account_id"),
+                                _api
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    return;
+                }
+            }
+        });
     }
 
     @Override

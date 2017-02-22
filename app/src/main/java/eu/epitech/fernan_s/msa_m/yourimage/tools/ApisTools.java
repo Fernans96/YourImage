@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.List;
 
 import eu.epitech.fernan_s.msa_m.yourimage.R;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -34,6 +35,8 @@ public class ApisTools {
                 return new ImgurAPI(ctx);
             case R.id.PixivSwitch:
                 return new PixivAPI(ctx);
+            case R.id.DeviantSwitch:
+                return new DeviantArtApi(ctx);
         }
         return null;
     }

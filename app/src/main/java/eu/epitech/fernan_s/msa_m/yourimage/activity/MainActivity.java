@@ -3,11 +3,14 @@ package eu.epitech.fernan_s.msa_m.yourimage.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -31,6 +35,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.R;
 import eu.epitech.fernan_s.msa_m.yourimage.adapter.CardAdapter;
 import eu.epitech.fernan_s.msa_m.yourimage.callback.BtnActivity;
 import eu.epitech.fernan_s.msa_m.yourimage.listener.EndlessRecyclerViewScrollListener;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
@@ -46,10 +51,12 @@ public class MainActivity extends AppCompatActivity
     private MaterialSearchView searchView;
     private RecyclerView recyclerView;
     private EndlessRecyclerViewScrollListener scrollListener;
+    private TextView favtext, mytext;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<IThread> treads;
 
-    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv, switchCompat500px;
-    private LinearLayout favbutton;
+    private SwitchCompat switchCompatFlickr, switchCompatImgur, switchCompatPixiv, switchCompatDeviant,  switchCompat500px;
+    private LinearLayout favbutton, mybutton;
     private NavigationView navigationView;
     private MultiImageView multiImageView;
     private View hView;
@@ -59,13 +66,14 @@ public class MainActivity extends AppCompatActivity
     private List<IApi> _lapi = null;
     private Context _ctx = this;
     private String _query = "";
+    private Typeface font;
     CompoundButton.OnCheckedChangeListener list = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             IApi api = ApisTools.CreateInstance(compoundButton.getId(), _ctx);
             if (b) {
                 _lapi.add(api);
-                setApis(api.getName());
+                setApis();
             } else {
                 RemoveApi(api.getName());
             }
@@ -81,6 +89,7 @@ public class MainActivity extends AppCompatActivity
 
     private void initVariable() {
         preferences = getSharedPreferences("user", Context.MODE_PRIVATE);
+        font = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams_Bold.ttf");
         editor = preferences.edit();
         treads = new ArrayList<>();
         gson = new Gson();
@@ -95,8 +104,12 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur = (SwitchCompat) hView.findViewById(R.id.ImgurSwitch);
         switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
+        switchCompatDeviant = (SwitchCompat) hView.findViewById(R.id.DeviantSwitch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
+        mybutton = (LinearLayout) hView.findViewById(R.id.my_button);
+        favtext = (TextView) favbutton.findViewById(R.id.fav_text);
+        mytext = (TextView) mybutton.findViewById(R.id.my_text);
         cardAdapter = new CardAdapter(treads);
         fab = (FloatingActionButton) findViewById(R.id.fab);
     }
@@ -104,6 +117,7 @@ public class MainActivity extends AppCompatActivity
     private void initBtn() {
         fab.setOnClickListener(new BtnActivity(PostActivity.class, _ctx));
         favbutton.setOnClickListener(new BtnActivity(FavActivity.class, _ctx));
+        mybutton.setOnClickListener(new BtnActivity(MyPicturesActivity.class, _ctx));
     }
 
     private void initrecyclerView() {
@@ -157,6 +171,33 @@ public class MainActivity extends AppCompatActivity
         init_api();
         initrecyclerView();
         initDrawer();
+        initSwipe();
+        initFont();
+    }
+
+    private void initFont(){
+        switchCompatFlickr.setTypeface(font);
+        switchCompatImgur.setTypeface(font);
+        switchCompatPixiv.setTypeface(font);
+        switchCompatDeviant.setTypeface(font);
+        favtext.setTypeface(font);
+        mytext.setTypeface(font);
+    }
+
+    private void initSwipe(){
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mSwipeRefreshLayout.setColorSchemeColors(getColor(R.color.colorPrimaryDark),getColor(R.color.colorPrimary),getColor(R.color.colorAccent));
+        }
+        else {
+            mSwipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimaryDark),getResources().getColor(R.color.colorPrimary),getResources().getColor(R.color.colorAccent));
+        }
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                UpdateAdapter();
+            }
+        });
     }
 
     @Override
@@ -211,8 +252,8 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setOnCheckedChangeListener(list);
         switchCompatFlickr.setOnCheckedChangeListener(list);
         switchCompatPixiv.setOnCheckedChangeListener(list);
+        switchCompatDeviant.setOnCheckedChangeListener(list);
         switchCompat500px.setOnCheckedChangeListener(list);
-
         RefreshApi();
 
         for (String s : names) {
@@ -222,11 +263,14 @@ public class MainActivity extends AppCompatActivity
                 switchCompatFlickr.setChecked(true);
             } else if (s.equals("Pixiv")) {
                 switchCompatPixiv.setChecked(true);
+            } else if (s.equals("Deviant")) {
+                switchCompatDeviant.setChecked(true);
             } else if (s.equals("500px")) {
                 switchCompat500px.setChecked(true);
             }
         }
         multiImageView.setShape(MultiImageView.Shape.CIRCLE);
+        setApis();
     }
 
     public void RefreshApi() {
@@ -239,6 +283,9 @@ public class MainActivity extends AppCompatActivity
         connected = new PixivAPI(this).isConnected();
         switchCompatPixiv.setEnabled(connected);
         switchCompatPixiv.setChecked(switchCompatPixiv.isChecked() && connected);
+        connected = new DeviantArtApi(this).isConnected();
+        switchCompatDeviant.setEnabled(connected);
+        switchCompatDeviant.setChecked(switchCompatDeviant.isChecked() && connected);
         connected = new PX500API(this).isConnected();
         switchCompat500px.setEnabled(connected);
         switchCompat500px.setChecked(switchCompat500px.isChecked() && connected);
@@ -301,11 +348,14 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void setApis(String api_name) {
+    private void setApis() {
         ArrayList<String> names = gson.fromJson(preferences.getString("apis", ""), ArrayList.class);
         if (names == null)
             names = new ArrayList<>();
-        names.add(api_name);
+        names.clear();
+        for (IApi a : _lapi) {
+            names.add(a.getName());
+        }
         String s = gson.toJson(names);
         editor.putString("apis", s);
         editor.apply();
@@ -348,6 +398,8 @@ public class MainActivity extends AppCompatActivity
                             int old = treads.size();
                             treads.addAll(lThread);
                             cardAdapter.notifyItemRangeInserted(old, lThread.size());
+                            if (mSwipeRefreshLayout.isRefreshing())
+                                mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
             }
@@ -377,4 +429,5 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
 }

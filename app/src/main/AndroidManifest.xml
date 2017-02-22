@@ -7,12 +7,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name="eu.epitech.fernan_s.msa_m.yourimage.App">
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="DATABASE"
             android:value="YourImage.db" />
@@ -47,6 +47,7 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <!-- android:theme="@style/AppTheme.NoActionBar"/> -->
         <activity android:name=".activity.FavActivity" />
+        <activity android:name=".activity.MyPicturesActivity"></activity>
     </application>
 
 </manifest>

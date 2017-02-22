@@ -306,7 +306,7 @@ public class PixivAPI implements IApi {
     }
 
     @Override
-    public void SendPic(String Title, String Desc, List<Bitmap> images) {
+    public void SendPic(String Title, String Desc, List<Bitmap> images, SendPictureCallback callback) {
 
     }
 
@@ -323,6 +323,11 @@ public class PixivAPI implements IApi {
             favs.add(f.getThread());
         }
         callback.onGetThreadComplete(favs);
+    }
+
+    @Override
+    public void getUserThread(int page, IThread.GetThreadCallback callback) {
+
     }
 
     @Override

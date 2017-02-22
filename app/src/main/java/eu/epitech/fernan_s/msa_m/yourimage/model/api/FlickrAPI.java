@@ -12,9 +12,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,11 +35,16 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.token.FlickrToken;
 import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
 import eu.epitech.fernan_s.msa_m.yourimage.tools.ImagesTools;
+import eu.epitech.fernan_s.msa_m.yourimage.tools.RequestTool;
+import oauth.signpost.OAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.http.HttpParameters;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -230,55 +242,25 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
-    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
-        /* Debut du cancer
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images, final SendPictureCallback callback) {
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
-                OkHttpClient client = SHttpClient.getInstance().getClient();
-                OkHttpOAuthConsumer consumer = new OkHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
-                consumer.setTokenWithSecret(_token.getToken(), _token.getSecret());
+                HttpParameters params =  new HttpParameters();
+                params.put("title", Title);
+                params.put("description", Desc);
+                OAuthConsumer dealabsConsumer = new DefaultOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+                dealabsConsumer.setTokenWithSecret(_token.getToken(), _token.getSecret());
                 try {
-                    for (Bitmap img : images) {
-                        RequestBody body = new MultipartBody.Builder()
-                                .addFormDataPart("title", Title)
-                                .addFormDataPart("description", Desc)
-                                .addFormDataPart("photo", "android.jpg", RequestBody.create(MediaType.parse("image/jpeg"), ImagesTools.toByteArray(img)))
-                                .build();
-                        Request request = new Request.Builder()
-                                .url("https://up.flickr.com/services/upload/")
-                                .post(body)
-                                .build();
-                        request = (Request) consumer.sign(request).unwrap();
-                        Log.d("TAG", "run: " + request.body().contentLength());
-                        Response res = client.newCall(request).execute();
-                        String str = res.body().string();
-                        Log.d("STR", "run: " + str);
-                        if (!res.isSuccessful()) {
-                            Handler handler = new Handler(_ctx.getMainLooper());
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(_ctx, "Upload Failed", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                            return;
-                        }
-                    }
-                    Handler handler = new Handler(_ctx.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(_ctx, "Upload Successful", Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } catch (IOException | OAuthExpectationFailedException | OAuthMessageSignerException | OAuthCommunicationException e) {
+                    Log.d("RES", "run: " + RequestTool.POSTRequest("https://up.flickr.com/services/upload/", params, dealabsConsumer, ImagesTools.toByteArray(images.get(0))));
+                    callback.onSuccess();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callback.onFailed();
                 }
             }
         });
         th.start();
-        fin du cancer
-        */ // les commentaires soigne le cancer
     }
 
     @Override
@@ -298,12 +280,50 @@ public class FlickrAPI implements IApi {
     }
 
     @Override
+    public void getUserThread(int page, final IThread.GetThreadCallback callback) {
+        String url = "https://api.flickr.com/services/rest/?";
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = null;
+        request = new Request.Builder().url(url + "method=flickr.people.getPhotos&per_page=45&api_key=" + CONSUMER_KEY + "&format=json&user_id=" + ((FlickrToken)_token).get_id() + "&page=" + page).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                List<IThread> lThread = new ArrayList<>();
+                String str = response.body().string();
+                Log.d("STR", "onResponse: " + str);
+                str = str.substring(14, str.length() - 1);
+                try {
+                    JSONObject jo = new JSONObject(str);
+                    JSONArray photos = jo.getJSONObject("photos").getJSONArray("photo");
+                    for (int i = 0; i < photos.length(); i++) {
+                        JSONObject joo = photos.getJSONObject(i);
+                        lThread.add(new FlickrThread(
+                                joo.getString("owner"),
+                                joo.getString("id"),
+                                joo.getString("title")
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    return;
+                }
+
+            }
+        });
+    }
+
+    @Override
     public String getName() {
         return ("Flickr");
     }
 
     @Override
     public boolean CanUpload() {
-        return false;
+        return true;
     }
 }

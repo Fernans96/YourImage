@@ -14,23 +14,46 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.token.IToken;
 
 public interface IApi {
     public void getAuthlink(AuthLinkCallback callback);
+
     public void connect(Context ctx, ConnectCallback callback);
+
     public void auth(String query, ConnectCallback callback);
+
     public boolean isConnected();
+
     public IToken getToken();
+
     public void RemoveToken();
+
     public void getThread(int page, IThread.GetThreadCallback callback);
+
     public void getThread(String tags, int page, IThread.GetThreadCallback callback);
-    public void SendPic(String Title, String Desc, List<Bitmap> images);
+
+    public void SendPic(String Title, String Desc, List<Bitmap> images, SendPictureCallback callback);
+
     public Bitmap getIcon();
+
     public void getFavs(int page, IThread.GetThreadCallback callback);
+
+    public void getUserThread(int page, IThread.GetThreadCallback callback);
+
     public String getName();
+
     public boolean CanUpload();
+
     public interface AuthLinkCallback {
         public void onAuthLinkFinished(String authlink);
     }
+
     public interface ConnectCallback {
         public void onConnectSuccess();
+
         public void onConnectFailed();
+    }
+
+    public interface SendPictureCallback {
+        public void onSuccess();
+
+        public void onFailed();
     }
 }

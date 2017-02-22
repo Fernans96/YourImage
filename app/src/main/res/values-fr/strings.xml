@@ -32,4 +32,10 @@
     <string name="confirDis">Êtes-vous sûr de vouloir vous déconnecter</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+
+    <string name="my">Mes Photos</string>
+
+    <string name="uploading">Téléchargement&#8230;</string>
+    <string name="uploaded">Téléchargé!</string>
+    <string name="upload_failed">Echec de téléchargement</string>
 </resources>

@@ -13,11 +13,15 @@
     tools:context="eu.epitech.fernan_s.msa_m.yourimage.activity.MainActivity"
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical">
-
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
