@@ -1,0 +1,49 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context="eu.epitech.fernan_s.msa_m.yourimage.fragment.IntroFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="center|top"
+        android:fontFamily="sans-serif-thin"
+        android:paddingLeft="32dp"
+        android:gravity="center|bottom"
+        android:paddingRight="32dp"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        android:id="@+id/tuto_title" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginBottom="32dp"
+        android:layout_gravity="center"
+        android:background="@drawable/custom_drop_shadow_drawable"
+        android:id="@+id/tuto_image"
+        android:layout_weight="0"
+        android:adjustViewBounds="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_weight="1.5"
+        android:gravity="center|bottom"
+        android:paddingLeft="60dp"
+        android:maxLines="4"
+        android:paddingTop="10dp"
+        android:layout_marginBottom="42dp"
+        android:paddingRight="60dp"
+        android:paddingBottom="50dp"
+        android:id="@+id/tuto_desc"
+        android:textColor="#ffffff"
+        android:textSize="15sp" />
+</FrameLayout>

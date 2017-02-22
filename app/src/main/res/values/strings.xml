@@ -38,4 +38,15 @@
     <string name="uploading">Uploading&#8230;</string>
     <string name="uploaded">Uploaded!</string>
     <string name="upload_failed">Upload failed!</string>
+
+    <string name="tuto_title_1">Welcome on YourImage</string>
+    <string name="tuto_title_2">Selection of the services</string>
+    <string name="tuto_title_3">Authentification\'s screen</string>
+    <string name="tuto_title_4">Image\'s interface</string>
+
+    <string name="tuto_desc_1">This interface allow you to see all images and send pictures to services connected</string>
+    <string name="tuto_desc_2">Here you can access to the selection of services and also ses your favorites</string>
+    <string name="tuto_desc_3">Choose services you want to authenticate</string>
+    <string name="tuto_desc_4">here you can save locally image or share the current thread on social media</string>
+
 </resources>

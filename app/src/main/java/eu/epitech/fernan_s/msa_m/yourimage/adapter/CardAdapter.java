@@ -112,6 +112,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
                     .load(R.drawable.ic_pixiv)
                     .transform(new GlideCircleTransform(_context))
                     .into(holder.ImageType);
+        else if (_data.get(position).getType().equals("Deviant"))
+            Glide
+                    .with(_context)
+                    .load(R.drawable.ic_deviant)
+                    .transform(new GlideCircleTransform(_context))
+                    .into(holder.ImageType);
 
         Glide.clear(holder.ImageContent);
         if (_data1.containsKey(position)) {
