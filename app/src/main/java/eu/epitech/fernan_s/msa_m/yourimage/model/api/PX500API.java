@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.test.espresso.core.deps.guava.base.Splitter;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +30,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.singleton.SHttpClient;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -148,7 +150,7 @@ public class PX500API implements IApi {
     @Override
     public void getThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_apilink + "photos?feature=popular&sort=rating&page=" + page + "&image_size=3&include_store=store_download&include_states=voted").build();
+        Request request = new Request.Builder().url(_apilink + "photos?feature=popular&sort=rating&page=" + page + "&image_size=4&include_store=store_download&include_states=voted").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -183,7 +185,7 @@ public class PX500API implements IApi {
     @Override
     public void getThread(String tags, int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = null;
+        Request request;
         try {
             request = new Request.Builder().url(_apilink + "photos/search?page=" + page + "&tag=" + URLEncoder.encode(tags, "UTF-8")).build();
         } catch (UnsupportedEncodingException e) {
@@ -221,8 +223,50 @@ public class PX500API implements IApi {
     }
 
     @Override
-    public void SendPic(final String Title, final String Desc, final List<Bitmap> images) {
-        //Humm cancer v2
+    public void getUserThread(int page, final IThread.GetThreadCallback callback) {
+        OkHttpClient client = SHttpClient.getInstance().getClient();
+        Request request = new Request.Builder().url(_apilink + "photos?feature=popular&username=" + _token.getUserName() + "&sort=created_at&image_size=4&include_store=store_download&include_states=voted").build();
+        Log.d("BLA", "getUserThread: " + _token.getUserName() + "\n" + _token.getToken());
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                try {
+                    String str = response.body().string();
+                    Log.d("BLA", "onResponse: " + str);
+                    JSONObject obj = new JSONObject(str);
+                    JSONArray arr = obj.getJSONArray("photos");
+                    List<IThread> lThread = new ArrayList<>();
+                    for (int i = 0; i < arr.length(); i++) {
+                        JSONObject ji = arr.getJSONObject(i);
+                        lThread.add(new PX500Thread(
+                                ji.getString("name"),
+                                ji.getString("id"),
+                                ji.getString("description"),
+                                ji.getJSONObject("user").getString("username"),
+                                ji.getJSONObject("user").getLong("id"),
+                                _api
+                        ));
+                    }
+                    callback.onGetThreadComplete(lThread);
+                } catch (JSONException e) {
+                    return;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void SendPic(final String Title, final String Desc, final List<Bitmap> images, final SendPictureCallback callback) {
+        CharSequence text = "Due to the complex process of uploading a picture on 500px this feature is not available.";
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(_ctx, text, duration);
+        toast.show();
     }
 
     @Override

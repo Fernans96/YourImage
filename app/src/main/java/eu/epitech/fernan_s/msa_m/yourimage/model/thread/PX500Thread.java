@@ -53,7 +53,7 @@ public class PX500Thread implements IThread {
     @Override
     public void getImages(final IImage.getImageCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.imgur.com/3/album/" + _id + "/images").build();
+        Request request = new Request.Builder().url("https://api.500px.com/v1/photos/" + _id + "?image_size=4&comments=1").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -65,10 +65,10 @@ public class PX500Thread implements IThread {
                 String str = response.body().string();
                 try {
                     JSONObject obj = new JSONObject(str);
-                    JSONArray arr = obj.getJSONArray("data");
+                    JSONArray arr = obj.getJSONArray("photo");
                     List<IImage> limage = new ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
-                        limage.add(new PX500Image(arr.getJSONObject(i).getString("link"),
+                        limage.add(new PX500Image(arr.getJSONObject(i).getString("image_url"),
                                 arr.getJSONObject(i).getString("name"),
                                 arr.getJSONObject(i).getString("description")));
                     }

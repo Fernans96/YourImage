@@ -68,8 +68,8 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
         imageView.setOnClickListener(this);
 
         imageView = (ImageView) findViewById(R.id.px500_auth);
-        imageView.setTag(lapi.get(3).isConnected());
-        if (!lapi.get(2).isConnected())
+        imageView.setTag(lapi.get(4).isConnected());
+        if (!lapi.get(4).isConnected())
             imageView.setColorFilter(filter);
         imageView.setOnClickListener(this);
     }
@@ -138,7 +138,7 @@ public class AuthActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.px500_auth:
-                CheckApi((ImageView)view, !(boolean)view.getTag(), 3);
+                CheckApi((ImageView)view, !(boolean)view.getTag(), 4);
                 break;
         }
     }
