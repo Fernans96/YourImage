@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatFlickr = (SwitchCompat) hView.findViewById(R.id.FlickrSwitch);
         switchCompatPixiv = (SwitchCompat) hView.findViewById(R.id.PixivSwitch);
         switchCompatDeviant = (SwitchCompat) hView.findViewById(R.id.DeviantSwitch);
+        switchCompat500px = (SwitchCompat) hView.findViewById(R.id.px500Switch);
         multiImageView = (MultiImageView) hView.findViewById(R.id.iv);
         favbutton = (LinearLayout) hView.findViewById(R.id.fav_button);
         mybutton = (LinearLayout) hView.findViewById(R.id.my_button);
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity
         switchCompatImgur.setTypeface(font);
         switchCompatPixiv.setTypeface(font);
         switchCompatDeviant.setTypeface(font);
+        switchCompat500px.setTypeface(font);
         favtext.setTypeface(font);
         mytext.setTypeface(font);
     }
