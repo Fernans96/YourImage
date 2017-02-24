@@ -38,4 +38,16 @@
     <string name="uploading">Téléchargement&#8230;</string>
     <string name="uploaded">Téléchargé!</string>
     <string name="upload_failed">Echec de téléchargement</string>
+
+
+    <string name="tuto_title_1">Bienvenue sur YourImage</string>
+    <string name="tuto_title_2">Selection des services</string>
+    <string name="tuto_title_3">Ecran d\'authentification</string>
+    <string name="tuto_title_4">Interface d\'image</string>
+
+    <string name="tuto_desc_1">Voici l\'interface permettant de voir l\'ensemble des images et d\'envoyer des photos.</string>
+    <string name="tuto_desc_2">Ici vous pourrez accéder à la selection des services ainsi que voir vos images favorites.</string>
+    <string name="tuto_desc_3">Choisissez les services sur lequels vous voulez vous authentifier.</string>
+    <string name="tuto_desc_4">Ici vous pourrez sauvegarder l\'image ou encore partager le thread en cours sur les réseaux sociaux.</string>
+
 </resources>

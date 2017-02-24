@@ -13,6 +13,7 @@ public class DeviantArtFav extends SugarRecord {
     DeviantArtThread _thread;
 
     public DeviantArtFav() {
+
     }
 
     public DeviantArtFav(DeviantArtThread thread) {

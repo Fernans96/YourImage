@@ -89,10 +89,10 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final CardAdapter.ViewHolder holder, final int position) {
         holder.TextTitle.setText(_data.get(position).getTitle());
-        if (!_data.get(position).getDesc().equals("null"))
-            holder.TextDesc.setText(_data.get(position).getDesc());
-        else
+        if (_data.get(position).getDesc() == null || _data.get(position).getDesc().equals("null"))
             holder.TextDesc.setText("");
+        else
+            holder.TextDesc.setText(_data.get(position).getDesc());
 
         if (_data.get(position).getType().equals("Imgur"))
             Glide
@@ -110,6 +110,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
             Glide
                     .with(_context)
                     .load(R.drawable.ic_pixiv)
+                    .transform(new GlideCircleTransform(_context))
+                    .into(holder.ImageType);
+        else if (_data.get(position).getType().equals("Deviant"))
+            Glide
+                    .with(_context)
+                    .load(R.drawable.ic_deviant)
                     .transform(new GlideCircleTransform(_context))
                     .into(holder.ImageType);
 
