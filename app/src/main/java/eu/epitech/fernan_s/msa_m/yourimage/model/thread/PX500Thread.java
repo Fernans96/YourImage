@@ -122,7 +122,7 @@ public class PX500Thread implements IThread {
 
     @Override
     public void unfav() {
-        long id = Long.parseLong(_id, 36);
+        long id = Long.parseLong(_id, 10);
         PX500Fav favs = PX500Fav.findById(PX500Fav.class, id);
         if (favs != null) {
             SugarRecord.delete(favs.getThread());
@@ -132,7 +132,7 @@ public class PX500Thread implements IThread {
 
     @Override
     public boolean isFav() {
-        long id = Long.parseLong(_id, 36);
+        long id = Long.parseLong(_id, 10);
         PX500Fav favs = PX500Fav.findById(PX500Fav.class, id);
         if (favs != null) {
             Log.d("PX500Thread", "isFav: " + favs.getId());
