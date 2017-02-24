@@ -6,8 +6,10 @@
 
     <WebView
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
         android:id="@+id/authView"/>
+    <!-- set @400dp because 500px login was just a thin line with both match parent and wrap content-->
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_gravity="center"

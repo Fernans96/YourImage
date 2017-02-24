@@ -76,4 +76,12 @@
         android:src="@drawable/ic_deviant"
         />
 
+    <ImageView
+        android:layout_marginTop="112dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center|top"
+        android:id="@+id/px500_auth"
+        android:src="@drawable/ic_500px"/>
+
 </FrameLayout>
