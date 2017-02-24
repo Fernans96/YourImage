@@ -37,7 +37,7 @@ public class PX500Thread implements IThread {
     long _authorId;
     String _Type = "500px";
     String _token;
-
+    private static String _consumer_key = "w6DJp5yU516NkXuO5DLU0hgW5Ph5LZqounfGiCeE";
 
     public PX500Thread(){}
 
@@ -53,7 +53,13 @@ public class PX500Thread implements IThread {
     @Override
     public void getImages(final IImage.getImageCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url("https://api.500px.com/v1/photos/" + _id + "?image_size=4&comments=1").build();
+        Request request = new Request.Builder().url("https://api.500px.com/v1/photos/" + _id +
+                "?image_size=4&comments=1&consumer_key="+ _consumer_key)
+                .header("Authorization", "OAuth oauth_consumer_key=\""+_consumer_key+
+                "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp="+
+                String.valueOf(System.currentTimeMillis() / 1000) +
+                ",oauth_version=\"1.0\","+
+                "oauth_token=\""+ _token+"\"").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

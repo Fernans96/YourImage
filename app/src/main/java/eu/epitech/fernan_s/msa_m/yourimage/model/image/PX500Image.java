@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.image;
 
+import android.util.Log;
+
 import com.bumptech.glide.load.model.GlideUrl;
 
 /**
@@ -12,6 +14,7 @@ public class PX500Image implements IImage {
     private String _Desc;
 
     public PX500Image(String link, String title, String desc) {
+        Log.d("Images", link);
         _Link = link;
         _Title = title;
         _Desc = desc;
