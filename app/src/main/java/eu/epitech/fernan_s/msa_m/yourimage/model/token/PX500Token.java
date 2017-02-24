@@ -1,5 +1,7 @@
 package eu.epitech.fernan_s.msa_m.yourimage.model.token;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,21 +13,17 @@ import java.util.Map;
 
 public class PX500Token implements IToken {
     private String _access_token;
-    private String _refresh_token;
-    private String _expires_in;
-    private String _token_type;
-    private String _account_username;
+    private String _access_token_secret;
+    private String _account_username = "gysco";
+    private String _token_type = "";
 
     private PX500Token() {
 
     }
 
     public PX500Token(Map<String, String> result) {
-        _access_token = result.get("access_token");
-        _refresh_token = result.get("refresh_token");
-        _expires_in = result.get("expires_in");
-        _token_type = result.get("token_type");
-        _account_username = result.get("account_username");
+        _access_token = result.get("oauth_token");
+        _access_token_secret = result.get("oauth_token_secret");
     }
 
     public static PX500Token Parse(JSONObject obj) {
@@ -33,10 +31,7 @@ public class PX500Token implements IToken {
 
         try {
             ret._access_token = obj.getString("access_token");
-            ret._account_username = obj.getString("account_username");
-            ret._expires_in = obj.getString("expires_in");
-            ret._refresh_token = obj.getString("refresh_token");
-            ret._token_type = obj.getString("token_type");
+            ret._access_token_secret = obj.getString("access_token_secret");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -61,7 +56,7 @@ public class PX500Token implements IToken {
 
     @Override
     public String getSecret() {
-        return "";
+        return _access_token_secret;
     }
 
     @Override
@@ -70,10 +65,8 @@ public class PX500Token implements IToken {
 
         try {
             ret.put("access_token", _access_token);
+            ret.put("access_token_secret", _access_token_secret);
             ret.put("account_username", _account_username);
-            ret.put("expires_in", _expires_in);
-            ret.put("refresh_token", _refresh_token);
-            ret.put("token_type", _token_type);
         } catch (JSONException e) {
             e.printStackTrace();
         }

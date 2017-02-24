@@ -9,6 +9,7 @@ import eu.epitech.fernan_s.msa_m.yourimage.model.api.DeviantArtApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.FlickrAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.IApi;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.ImgurAPI;
+import eu.epitech.fernan_s.msa_m.yourimage.model.api.PX500API;
 import eu.epitech.fernan_s.msa_m.yourimage.model.api.PixivAPI;
 import eu.epitech.fernan_s.msa_m.yourimage.model.thread.IThread;
 
@@ -37,6 +38,8 @@ public class ApisTools {
                 return new PixivAPI(ctx);
             case R.id.DeviantSwitch:
                 return new DeviantArtApi(ctx);
+            case R.id.px500Switch:
+                return new PX500API(ctx);
         }
         return null;
     }
