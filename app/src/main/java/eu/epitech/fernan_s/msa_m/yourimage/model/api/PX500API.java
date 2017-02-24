@@ -194,7 +194,13 @@ public class PX500API implements IApi {
         OkHttpClient client = SHttpClient.getInstance().getClient();
         Request request;
         try {
-            request = new Request.Builder().url(_apilink + "photos/search?page=" + page + "&tag=" + URLEncoder.encode(tags, "UTF-8")).build();
+            request = new Request.Builder().url(_apilink + "photos/search?page=" + page + "&tag=" +
+                    URLEncoder.encode(tags, "UTF-8") + "&consumer_key=" + _consumer_key)
+                    .header("Authorization", "OAuth oauth_consumer_key=\""+_consumer_key+
+                    "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp="+
+                    String.valueOf(System.currentTimeMillis() / 1000) +
+                    ",oauth_version=\"1.0\","+
+                    "oauth_token=\""+ _token.getToken()+"\"").build();
         } catch (UnsupportedEncodingException e) {
             return;
         }
@@ -232,7 +238,15 @@ public class PX500API implements IApi {
     @Override
     public void getUserThread(int page, final IThread.GetThreadCallback callback) {
         OkHttpClient client = SHttpClient.getInstance().getClient();
-        Request request = new Request.Builder().url(_apilink + "photos?feature=popular&username=" + _token.getUserName() + "&sort=created_at&image_size=4&include_store=store_download&include_states=voted").build();
+        Request request = new Request.Builder().url(_apilink + "photos?feature=popular&username=" +
+                _token.getUserName() + "&sort=created_at&image_size=4&"+
+                "include_store=store_download&include_states=voted&page=" + page +
+                "&consumer_key=" + _consumer_key)
+                .header("Authorization", "OAuth oauth_consumer_key=\""+_consumer_key+
+                        "\",oauth_signature_method=\"HMAC-SHA1\",oauth_timestamp="+
+                        String.valueOf(System.currentTimeMillis() / 1000) +
+                        ",oauth_version=\"1.0\","+
+                        "oauth_token=\""+ _token.getToken()+"\"").build();
         Log.d("BLA", "getUserThread: " + _token.getUserName() + "\n" + _token.getToken());
         client.newCall(request).enqueue(new Callback() {
             @Override
