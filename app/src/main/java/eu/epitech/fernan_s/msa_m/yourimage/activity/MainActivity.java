@@ -166,16 +166,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(getIntent().getBooleanExtra("startauth", false)){
-            Intent intent = new Intent(this, AuthActivity.class);
-            startActivity(intent);
-        }
 
         initVariable();
         initItem();
         initBtn();
         init_search();
         init_api();
+        if(getIntent().getBooleanExtra("startauth", false)){
+            Intent intent = new Intent(this, AuthActivity.class);
+            startActivityForResult(intent, 0);
+        }
         initrecyclerView();
         initDrawer();
         initSwipe();
