@@ -293,6 +293,6 @@ public class PX500API implements IApi {
 
     @Override
     public boolean CanUpload() {
-        return true;
+        return false;
     }
 }
