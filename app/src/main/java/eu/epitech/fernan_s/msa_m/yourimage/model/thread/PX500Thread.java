@@ -73,11 +73,9 @@ public class PX500Thread implements IThread {
                     JSONObject obj = new JSONObject(str);
                     JSONObject arr = obj.getJSONObject("photo");
                     List<IImage> limage = new ArrayList<>();
-                    for (int i = 0; i < arr.length(); i++) {
-                        limage.add(new PX500Image(arr.getString("image_url"),
+                    limage.add(new PX500Image(arr.getString("image_url"),
                                 arr.getString("name"),
                                 arr.getString("description")));
-                    }
                     callback.onGetImageFinished(limage);
                 } catch (JSONException e) {
                     return;
