@@ -205,6 +205,10 @@ public class ImageActivity extends AppCompatActivity {
                 String link = lImage.get(mPager.getCurrentItem()).getLink().toStringUrl();
                 String[] picid = link.split("/");
                 String name = picid[picid.length - 1];
+                if(!name.contains(".")) {
+                    name += ".jpg";
+                }
+
                 file_download(link, name);
                 break;
             case R.id.action_share:
@@ -235,11 +239,13 @@ public class ImageActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
+/*
             File direct = new File(Environment.getExternalStorageDirectory()
                     + "/YourImage");
             if (!direct.exists()) {
                 direct.mkdirs();
             }
+*/
 
             DownloadManager mgr = (DownloadManager) this.getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -252,8 +258,10 @@ public class ImageActivity extends AppCompatActivity {
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_WIFI
                             | DownloadManager.Request.NETWORK_MOBILE)
-                    .setAllowedOverRoaming(false).setTitle("Demo")
-                    .setDescription("Something useful. No, really.")
+                    .setAllowedOverRoaming(false).setTitle("YourImage")
+                    .setDescription("Downloading")
+//                    .setDestinationInExternalFilesDir(_ctx, "")
+
                     .setDestinationInExternalPublicDir("/YourImage", name);
 
             mgr.enqueue(request);
